@@ -61,55 +61,57 @@ export default function ServiceDetail() {
         eyebrow={fullPath}
         title={result.standardCode ? `${result.standardCode} ${result.name}` : result.name}
       />
-      <div className="detail-grid">
-        <div className="detail-main">
-          <div className="detail-placeholder">
-            <span>
-              ◻ pull real copy + confirmed image for "{result.slug}" from
-              pages_full_content.json / icon_inventory.csv
-            </span>
-          </div>
-          <p>
-            This is placeholder description text for {result.name}. Replace with the
-            real body content extracted from the WordPress export for this page.
-          </p>
+      <div className = "wrap">
+        <div className="detail-grid">
+          <div className="detail-main">
+            <div className="detail-placeholder">
+              <span>
+                ◻ pull real copy + confirmed image for "{result.slug}" from
+                pages_full_content.json / icon_inventory.csv
+              </span>
+            </div>
+            <p>
+              This is placeholder description text for {result.name}. Replace with the
+              real body content extracted from the WordPress export for this page.
+            </p>
 
-          {result.benefits && (
-            <>
-              <h3>Certification benefits</h3>
-              <div className="benefits">
-                {result.benefits.map((b) => (
-                  <div className="benefit" key={b.id}>
-                    <span className="id mono">{b.id}</span>
-                    {b.label}
-                    <span className="icon-tag mono">{b.iconFile}</span>
-                  </div>
-                ))}
+            {result.benefits && (
+              <>
+                <h3>Certification benefits</h3>
+                <div className="benefits">
+                  {result.benefits.map((b) => (
+                    <div className="benefit" key={b.id}>
+                      <span className="id mono">{b.id}</span>
+                      {b.label}
+                      <span className="icon-tag mono">{b.iconFile}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {parent && (
+            <div className="sidebar">
+              <h3>More in {parent.name}</h3>
+              <span className="sub mono">{parent.path}</span>
+              {siblings.map((sib) => (
+                <Link to={sib.path} className="sidebar-item" key={sib.slug}>
+                  <span>
+                    <span className="id mono">{sib.path}</span> {sib.name}
+                  </span>
+                </Link>
+              ))}
+              <div className="sidebar-cta">
+                <div className="t">Request a quote</div>
+                <p>Get pricing for {result.name} tailored to your organization.</p>
+                <a href={`/contact?intent=quote&service=${result.slug}`} className="btn-primary">
+                  Get a quotation
+                </a>
               </div>
-            </>
+            </div>
           )}
         </div>
-
-        {parent && (
-          <div className="sidebar">
-            <h3>More in {parent.name}</h3>
-            <span className="sub mono">{parent.path}</span>
-            {siblings.map((sib) => (
-              <Link to={sib.path} className="sidebar-item" key={sib.slug}>
-                <span>
-                  <span className="id mono">{sib.path}</span> {sib.name}
-                </span>
-              </Link>
-            ))}
-            <div className="sidebar-cta">
-              <div className="t">Request a quote</div>
-              <p>Get pricing for {result.name} tailored to your organization.</p>
-              <a href={`/contact?intent=quote&service=${result.slug}`} className="btn-primary">
-                Get a quotation
-              </a>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );

@@ -5,24 +5,26 @@ import { navLinks } from "../../data/siteContent";
 export default function Navbar() {
   return (
     <nav className="navbar">
-      <NavLink to="/" className="logo">
-        <img src={logoWhite} alt="Luxuz Consult logo" />
-        LUXUZ <span>CONSULT</span>
-      </NavLink>
-      <div className="navlinks">
-        {navLinks.map((link) => (
-          <NavLink
-            key={link.path}
-            to={link.path}
-            className={({ isActive }) => (isActive ? "on" : "")}
-          >
-            {link.label}
-          </NavLink>
-        ))}
+      <div className="wrap">
+        <NavLink to="/" className="logo">
+          <img src={logoWhite} alt="Luxuz Consult logo" />
+          LUXUZ <span>CONSULT</span>
+        </NavLink>
+        <div className="navlinks">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              className={({ isActive }) => (isActive ? "on" : "")}
+            >
+              {link.label}
+            </NavLink>
+          ))}
+        </div>
+        <NavLink to="/contact?intent=quote" className="navcta">
+          Request quote
+        </NavLink>
       </div>
-      <NavLink to="/contact?intent=quote" className="navcta">
-        Request quote
-      </NavLink>
     </nav>
   );
 }

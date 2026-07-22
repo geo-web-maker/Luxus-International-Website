@@ -28,59 +28,60 @@ export default function Career() {
   return (
     <>
       <PageHeader eyebrow="/career" title="Join the team" />
-
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search by keyword"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-        <button className="btn-primary">Search jobs</button>
-      </div>
-
-      <div className="filters mono">
-        {filterOptions.map((f) => (
-          <label key={f} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <input
-              type="checkbox"
-              checked={activeFilters.has(f)}
-              onChange={() => toggleFilter(f)}
-            />
-            {f}
-          </label>
-        ))}
-      </div>
-
-      {results.length === 0 ? (
-        <div className="empty">
-          No open positions right now — check back soon, or send your CV to{" "}
-          <span className="mono" style={{ color: "var(--brand-blue)" }}>{company.email}</span>
+      <div className = "wrap">
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search by keyword"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          <button className="btn-primary">Search jobs</button>
         </div>
-      ) : (
-        <div className="section" style={{ paddingTop: 0 }}>
-          {results.map((job) => (
-            <Link
-              key={job.id}
-              to={`/career/${job.id}`}
-              className="sidebar-item"
-              style={{ display: "flex", padding: "18px 0" }}
-            >
-              <span>
-                <strong>{job.title}</strong> — {job.location}
-                {job.remote ? " · Remote" : ""}
-              </span>
-              <span className="mono" style={{ color: "var(--text-muted)" }}>{job.type}</span>
-            </Link>
+
+        <div className="filters mono">
+          {filterOptions.map((f) => (
+            <label key={f} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <input
+                type="checkbox"
+                checked={activeFilters.has(f)}
+                onChange={() => toggleFilter(f)}
+              />
+              {f}
+            </label>
           ))}
         </div>
-      )}
+
+        {results.length === 0 ? (
+          <div className="empty">
+            No open positions right now — check back soon, or send your CV to{" "}
+            <span className="mono" style={{ color: "var(--brand-blue)" }}>{company.email}</span>
+          </div>
+        ) : (
+          <div className="section" style={{ paddingTop: 0 }}>
+            {results.map((job) => (
+              <Link
+                key={job.id}
+                to={`/career/${job.id}`}
+                className="sidebar-item"
+                style={{ display: "flex", padding: "18px 0" }}
+              >
+                <span>
+                  <strong>{job.title}</strong> — {job.location}
+                  {job.remote ? " · Remote" : ""}
+                </span>
+                <span className="mono" style={{ color: "var(--text-muted)" }}>{job.type}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   );
 }
