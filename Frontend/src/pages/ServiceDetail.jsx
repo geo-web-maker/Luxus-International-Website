@@ -14,12 +14,14 @@ export default function ServiceDetail() {
       <>
         <PageHeader eyebrow={fullPath} title="Not found" />
         <div className="section">
+          <div className="wrap">
           <p style={{ color: "var(--text-secondary)" }}>
             No service matches <span className="mono">{fullPath}</span>. Check
             <span className="mono"> src/data/services.js</span> — this data is
             still a first-pass extraction, not the final content.
           </p>
         </div>
+      </div>
       </>
     );
   }
@@ -31,18 +33,20 @@ export default function ServiceDetail() {
       <>
         <PageHeader eyebrow={fullPath} title={result.name} />
         <div className="section">
-          <p style={{ color: "var(--text-secondary)", maxWidth: 640, marginBottom: 32 }}>
-            {result.summary}
-          </p>
-          <div className="grid3">
-            {result.children.map((child) => (
-              <ServiceCard
-                key={child.slug}
-                path={child.path}
-                name={child.standardCode ? `${child.standardCode} — ${child.name}` : child.name}
-                image={{ status: "pending" }}
-              />
-            ))}
+            <div className="wrap">
+            <p style={{ color: "var(--text-secondary)", maxWidth: 640, marginBottom: 32 }}>
+              {result.summary}
+            </p>
+            <div className="grid3">
+              {result.children.map((child) => (
+                <ServiceCard
+                  key={child.slug}
+                  path={child.path}
+                  name={child.standardCode ? `${child.standardCode} — ${child.name}` : child.name}
+                  image={{ status: "pending" }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </>

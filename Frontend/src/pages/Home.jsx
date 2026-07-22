@@ -1,6 +1,7 @@
 import WireframeGlobe from "../components/ui/WireframeGlobe";
 import ServiceCard from "../components/ui/ServiceCard";
 import { services } from "../data/services";
+import { Link } from "react-router-dom";
 import { company, isoCoverageTags } from "../data/siteContent";
 
 export default function Home() {
@@ -22,7 +23,7 @@ export default function Home() {
               <Link to="/contact?intent=quote" className="btn-primary">Get a quotation</Link>
               <Link to="/services" className="btn-ghost">Our services</Link>
               <div className="hero-coverage mono">
-                {coverageTags.map((tag) => <span key={tag}>{tag}</span>)}
+                 {isoCoverageTags.map((tag) => <span key={tag}>{tag}</span>)}
               </div>
             </div>
            </div>
