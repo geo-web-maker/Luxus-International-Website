@@ -1,14 +1,13 @@
 import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import ServiceCard from "../components/ui/ServiceCard";
-import { useStore, findServiceByPath } from "../lib/store";
+import { findServiceByPath } from "../data/services";
 
 export default function ServiceDetail() {
   const params = useParams();
-  const { services } = useStore();
   const splat = params["*"] || "";
   const fullPath = `/ser/${splat}`;
-  const result = findServiceByPath(services, fullPath);
+  const result = findServiceByPath(fullPath);
 
   if (!result) {
     return (
@@ -105,9 +104,9 @@ export default function ServiceDetail() {
             <div className="sidebar-cta">
               <div className="t">Request a quote</div>
               <p>Get pricing for {result.name} tailored to your organization.</p>
-              <Link to={`/contact?intent=quote&service=${result.slug}`} className="btn-primary">
+              <a href={`/contact?intent=quote&service=${result.slug}`} className="btn-primary">
                 Get a quotation
-              </Link>
+              </a>
             </div>
           </div>
         )}

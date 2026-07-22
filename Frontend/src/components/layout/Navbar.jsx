@@ -1,10 +1,8 @@
 import { NavLink } from "react-router-dom";
 import logoWhite from "../../assets/logo-dark-bg.png";
-import { useStore } from "../../lib/store";
+import { navLinks } from "../../data/siteContent";
 
 export default function Navbar() {
-  const { content } = useStore();
-  const { navLinks } = content;
   return (
     <nav className="navbar">
       <NavLink to="/" className="logo">

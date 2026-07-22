@@ -2,11 +2,9 @@ import { useSearchParams } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import ContactForm from "../components/forms/ContactForm";
 import QuoteForm from "../components/forms/QuoteForm";
-import { useStore } from "../lib/store";
+import { company } from "../data/siteContent";
 
 export default function Contact() {
-  const { content } = useStore();
-  const { company } = content;
   const [searchParams] = useSearchParams();
   const isQuote = searchParams.get("intent") === "quote";
   const presetService = searchParams.get("service") || "";

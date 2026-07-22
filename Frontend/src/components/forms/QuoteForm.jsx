@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { quoteFormOptions } from "../../data/siteContent";
-import { submissionsApi } from "../../lib/store";
 
 const schema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -27,9 +26,8 @@ export default function QuoteForm({ presetService = "" }) {
   });
 
   const onSubmit = async (data) => {
-    // TODO: wire to FastAPI POST /api/quote-requests once backend is live.
-    // Until then, submissions land in the local admin inbox (Admin > Submissions).
-    submissionsApi.create("quote", data);
+    // TODO: wire to FastAPI POST /api/quote-requests once backend is live
+    console.log("quote request submit", data);
     await new Promise((r) => setTimeout(r, 400));
     setSubmitted(true);
   };

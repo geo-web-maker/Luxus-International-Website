@@ -1,49 +1,44 @@
 import { useState } from "react";
 import PageHeader from "../components/layout/PageHeader";
-import { useStore } from "../lib/store";
+import { company } from "../data/siteContent";
 
-function getAboutPanels(company) {
-  return {
-    values: {
-      label: "Core values",
-      path: "/about/core-values",
-      render: () => (
-        <ul>
-          <li>Delivering exceptional service and support to every client</li>
-          <li>Personalized solutions tailored to each organization's needs</li>
-          <li>Fostering a culture of excellence and continuous improvement</li>
-          <li>Building long-term relationships with clients and partners</li>
-        </ul>
-      ),
-    },
-    why: {
-      label: "Why Luxuz",
-      path: "/about/why-luxuz",
-      render: () => (
-        <p>
-          Fully experienced, certified trainers with hands-on, interactive delivery.
-          Quality training at the most affordable fees in the sector, without
-          compromising standards.
-        </p>
-      ),
-    },
-    accred: {
-      label: "Accreditation",
-      path: "/about/accreditation",
-      render: () => (
-        <p>
-          {company.shortName} operates in partnership with {company.accreditationPartner},
-          ensuring every certification issued carries recognized international accreditation.
-        </p>
-      ),
-    },
-  };
-}
+const aboutPanels = {
+  values: {
+    label: "Core values",
+    path: "/about/core-values",
+    render: () => (
+      <ul>
+        <li>Delivering exceptional service and support to every client</li>
+        <li>Personalized solutions tailored to each organization's needs</li>
+        <li>Fostering a culture of excellence and continuous improvement</li>
+        <li>Building long-term relationships with clients and partners</li>
+      </ul>
+    ),
+  },
+  why: {
+    label: "Why Luxuz",
+    path: "/about/why-luxuz",
+    render: () => (
+      <p>
+        Fully experienced, certified trainers with hands-on, interactive delivery.
+        Quality training at the most affordable fees in the sector, without
+        compromising standards.
+      </p>
+    ),
+  },
+  accred: {
+    label: "Accreditation",
+    path: "/about/accreditation",
+    render: () => (
+      <p>
+        {company.shortName} operates in partnership with {company.accreditationPartner},
+        ensuring every certification issued carries recognized international accreditation.
+      </p>
+    ),
+  },
+};
 
 export default function About() {
-  const { content } = useStore();
-  const { company } = content;
-  const aboutPanels = getAboutPanels(company);
   const [activeTab, setActiveTab] = useState("values");
   const ActivePanel = aboutPanels[activeTab];
 

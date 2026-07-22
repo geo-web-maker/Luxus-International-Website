@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { submissionsApi } from "../../lib/store";
 
 // Field set and labels are a direct match to the extracted WP Job Manager
 // _form_fields schema — do not rename without checking that source again.
@@ -17,22 +16,15 @@ const schema = z.object({
     .refine((files) => files?.length === 1, "CV upload is required"),
 });
 
-export default function JobApplicationForm({ jobId, jobTitle }) {
+export default function JobApplicationForm({ jobTitle }) {
   const [submitted, setSubmitted] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async ({ cv, ...data }) => {
-    // TODO: wire to FastAPI POST /api/job-applications (multipart, CV -> R2) once backend is live.
-    // There's no file storage yet, so only the CV's filename is kept for the
-    // local admin inbox (Admin > Submissions) — the actual file isn't persisted.
-    submissionsApi.create("jobApplication", {
-      ...data,
-      jobId,
-      jobTitle,
-      cvFileName: cv?.[0]?.name || null,
-    });
+  const onSubmit = async (data) => {
+    // TODO: wire to FastAPI POST /api/job-applications (multipart, CV -> R2) once backend is live
+    console.log("job application submit", { ...data, jobTitle });
     await new Promise((r) => setTimeout(r, 400));
     setSubmitted(true);
   };

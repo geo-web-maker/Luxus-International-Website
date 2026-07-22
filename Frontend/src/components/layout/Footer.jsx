@@ -1,8 +1,6 @@
-import { useStore } from "../../lib/store";
+import { company } from "../../data/siteContent";
 
 export default function Footer() {
-  const { content } = useStore();
-  const { company } = content;
   return (
     <div className="footer mono">
       <span>© {new Date().getFullYear()} {company.name}</span>

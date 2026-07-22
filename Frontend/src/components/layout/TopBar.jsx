@@ -1,9 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { useStore } from "../../lib/store";
+import { company } from "../../data/siteContent";
 
 export default function TopBar() {
-  const { content } = useStore();
-  const { company } = content;
   const { pathname } = useLocation();
   const displayPath = pathname === "/" ? "/ home" : pathname;
 

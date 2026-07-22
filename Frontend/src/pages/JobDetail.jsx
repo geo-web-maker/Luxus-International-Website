@@ -1,11 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import JobApplicationForm from "../components/forms/JobApplicationForm";
-import { useStore } from "../lib/store";
+import { jobs } from "../data/jobs";
 
 export default function JobDetail() {
   const { jobId } = useParams();
-  const { jobs } = useStore();
   const job = jobs.find((j) => j.id === jobId);
 
   if (!job) {
@@ -32,7 +31,7 @@ export default function JobDetail() {
         <div className="sidebar">
           <h3>Apply now</h3>
           <span className="sub mono">/career/{job.id}/apply</span>
-          <JobApplicationForm jobId={job.id} jobTitle={job.title} />
+          <JobApplicationForm jobTitle={job.title} />
         </div>
       </div>
     </>

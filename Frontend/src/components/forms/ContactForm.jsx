@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { submissionsApi } from "../../lib/store";
 
 const schema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -18,9 +17,8 @@ export default function ContactForm() {
   });
 
   const onSubmit = async (data) => {
-    // TODO: wire to FastAPI POST /api/contact-messages once backend is live.
-    // Until then, submissions land in the local admin inbox (Admin > Submissions).
-    submissionsApi.create("contact", data);
+    // TODO: wire to FastAPI POST /api/contact-messages once backend is live
+    console.log("contact form submit", data);
     await new Promise((r) => setTimeout(r, 400));
     setSubmitted(true);
   };

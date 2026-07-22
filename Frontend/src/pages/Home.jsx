@@ -1,11 +1,9 @@
-import { Link } from "react-router-dom";
 import WireframeGlobe from "../components/ui/WireframeGlobe";
 import ServiceCard from "../components/ui/ServiceCard";
-import { useStore } from "../lib/store";
+import { services } from "../data/services";
+import { company, isoCoverageTags } from "../data/siteContent";
 
 export default function Home() {
-  const { services, content } = useStore();
-  const { company, coverageTags } = content;
   const teaserServices = services.slice(0, 3);
 
   return (
@@ -20,10 +18,10 @@ export default function Home() {
             ISO certification, engineering design, and HSE compliance — hassle-free,
             from audit to accreditation.
           </p>
-          <Link to="/contact?intent=quote" className="btn-primary">Get a quotation</Link>
-          <Link to="/services" className="btn-ghost">Our services</Link>
+          <a href="/contact?intent=quote" className="btn-primary">Get a quotation</a>
+          <a href="/services" className="btn-ghost">Our services</a>
           <div className="hero-coverage mono">
-            {coverageTags.map((tag) => <span key={tag}>{tag}</span>)}
+            {isoCoverageTags.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
         </div>
       </div>

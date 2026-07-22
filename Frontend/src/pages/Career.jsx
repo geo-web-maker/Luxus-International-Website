@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
-import { useStore } from "../lib/store";
+import { jobs } from "../data/jobs";
+import { company } from "../data/siteContent";
 
 const filterOptions = ["Freelance", "Full time", "Part time", "Internship", "Temporary"];
 
 export default function Career() {
-  const { jobs, content } = useStore();
-  const { company } = content;
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
   const [activeFilters, setActiveFilters] = useState(new Set(filterOptions));
