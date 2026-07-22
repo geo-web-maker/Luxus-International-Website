@@ -1,0 +1,62 @@
+/* Luxuz Consult — global design tokens, derived from the approved design brief.
+   Do not introduce new accent colors — see /DESIGN_BRIEF.md at project root. */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* surfaces */
+  --bg-navy: #0C1524;
+  --bg-navy-alt: #101E33;
+  --surface-raised: #10182A;
+  --border-hairline: #1B2536;
+  --border-hairline-dashed: #2A3648;
+
+  /* text */
+  --text-primary: #F3F5F8;
+  --text-secondary: #C4CBD6;
+  --text-muted: #6E7A8C;
+  --text-faint: #5A6478;
+
+  /* brand accents — sampled from the logo. blue = wayfinding/labels, green = action only */
+  --brand-blue: #6FC5F0;
+  --brand-blue-solid: #1C8FD1;
+  --brand-green: #0F7A45;
+  --brand-green-hover: #12945447;
+
+  /* type */
+  --font-display: 'Archivo', sans-serif;
+  --font-body: 'Source Sans 3', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-navy);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; }
+ul { list-style: none; }
+
+.mono { font-family: var(--font-mono); }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+@media (max-width: 860px) {
+  .container { padding: 0 20px; }
+}
+
+/* visible keyboard focus, kept even where components override outline */
+:focus-visible {
+  outline: 2px solid var(--brand-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
