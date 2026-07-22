@@ -1,12 +1,18 @@
 /* Component styles — mirrors the approved mockup 1:1, just wired to CSS variables
    instead of hardcoded hex so the design brief stays the single source of truth. */
 
-.site { max-width: 1200px; margin: 0 auto; background: var(--bg-navy); }
-
-.topbar { display: flex; justify-content: space-between; padding: 8px 48px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid var(--border-hairline); }
+/* .site is now full-bleed — no max-width here. Each band (.topbar, .navbar,
+   .hero, .section, .footer, etc.) stretches edge to edge with its own
+   background, and gets a .wrap div around its inner content to keep that
+   content centered at --content-max. This is the fix for "site doesn't
+   fill the screen": before, the WHOLE page — including background colors —
+   stopped dead at 1200px and floated in the middle of wide monitors. */
+.site { background: var(--bg-navy); }
+.topbar { border-bottom: 1px solid var(--border-hairline); }
+.topbar > .wrap { display: flex; justify-content: space-between; padding-top: 8px; padding-bottom: 8px; font-size: 11px; color: var(--text-muted); }
 .topbar .hl { color: var(--brand-blue); }
 
-.navbar { display: flex; align-items: center; justify-content: space-between; padding: 22px 48px; }
+.navbar > .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 22px; padding-bottom: 22px; }
 .logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 900; font-size: 17px; letter-spacing: -0.01em; }
 .logo img { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
 .logo span { color: var(--brand-blue); }
@@ -17,22 +23,23 @@
 .btn-primary { background: var(--brand-green); color: #fff; font-size: 13px; font-weight: 700; padding: 14px 26px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; }
 .btn-ghost { border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 13px; font-weight: 600; padding: 13px 26px; border-radius: 3px; margin-left: 12px; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; }
 
-.pagehead { position: relative; padding: 56px 48px; overflow: hidden; border-bottom: 1px solid var(--border-hairline); background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-alt) 60%, var(--bg-navy) 100%); }
-.pagehead .hero-globe { position: absolute; top: 50%; right: -140px; transform: translateY(-50%); }
+.pagehead { position: relative; overflow: hidden; border-bottom: 1px solid var(--border-hairline); background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-alt) 60%, var(--bg-navy) 100%); }
+.pagehead > .wrap { padding-top: clamp(40px, 6vw, 56px); padding-bottom: clamp(40px, 6vw, 56px); }
 .pagehead .in { position: relative; z-index: 1; }
 .pagehead .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 10px; display: block; }
-.pagehead h1 { font-family: var(--font-display); font-weight: 900; font-size: 36px; text-transform: uppercase; letter-spacing: -0.01em; }
+.pagehead h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 4vw, 36px); text-transform: uppercase; letter-spacing: -0.01em; }
 
-.hero { position: relative; padding: 110px 48px 90px; overflow: hidden; background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-alt) 55%, var(--bg-navy) 100%); }
+.hero { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-alt) 55%, var(--bg-navy) 100%); }
+.hero > .wrap { padding-top: clamp(64px, 10vw, 110px); padding-bottom: clamp(50px, 7vw, 90px); }
 .hero .hero-globe { position: absolute; top: 50%; right: -180px; transform: translateY(-50%); }
 .hero-inner { position: relative; max-width: 620px; z-index: 1; }
 .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); display: inline-block; margin-bottom: 16px; }
-.hero-inner h1 { font-family: var(--font-display); font-weight: 900; font-size: 60px; line-height: 1.02; letter-spacing: -0.01em; margin-bottom: 24px; text-transform: uppercase; }
+.hero-inner h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(34px, 5.5vw, 60px); line-height: 1.02; letter-spacing: -0.01em; margin-bottom: 24px; text-transform: uppercase; }
 .hero-inner p { font-size: 17px; line-height: 1.65; color: var(--text-secondary); max-width: 460px; margin-bottom: 30px; }
 .hero-coverage { position: relative; margin-top: 40px; display: flex; gap: 10px; flex-wrap: wrap; }
 .hero-coverage span { font-size: 11px; color: #A9B3C2; border: 1px solid var(--border-hairline-dashed); padding: 5px 10px; border-radius: 3px; }
 
-.section { padding: 48px; }
+.section > .wrap { padding-top: var(--gutter); padding-bottom: var(--gutter); }
 .section h2 { font-family: var(--font-display); font-weight: 900; font-size: 24px; text-transform: uppercase; margin-bottom: 24px; }
 .section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; }
 .count { font-size: 11px; color: var(--text-muted); }
@@ -48,14 +55,15 @@
 .card .name { position: relative; z-index: 2; font-family: var(--font-display); font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 0.01em; }
 .card .filetag { position: absolute; z-index: 2; top: 14px; left: 18px; right: 18px; font-size: 9px; color: var(--text-faint); border: 1px dashed var(--border-hairline-dashed); padding: 4px 7px; border-radius: 2px; }
 
-.info-strip { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); }
-.info-cell { padding: 22px 48px; border-right: 1px solid var(--border-hairline); }
+.info-strip { border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); }
+.info-strip > .wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
+.info-cell { padding: 22px var(--gutter) 22px 0; border-right: 1px solid var(--border-hairline); }
 .info-cell:last-child { border-right: none; }
 .info-cell .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
 .info-cell .value { font-size: 14px; color: #E7EAEF; }
-@media (max-width: 860px) { .info-strip { grid-template-columns: 1fr; } .info-cell { border-right: none; border-bottom: 1px solid var(--border-hairline); } }
+@media (max-width: 860px) { .info-strip > .wrap { grid-template-columns: 1fr; } .info-cell { border-right: none; border-bottom: 1px solid var(--border-hairline); } }
 
-.footer { display: flex; justify-content: space-between; padding: 26px 48px; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; gap: 8px; }
+.footer > .wrap { display: flex; justify-content: space-between; padding-top: 26px; padding-bottom: 26px; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; gap: 8px; }
 .footer .hl { color: var(--brand-blue); }
 
 /* About page */
