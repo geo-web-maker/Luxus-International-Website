@@ -17,6 +17,10 @@
   --text-muted: #6E7A8C;
   --text-faint: #5A6478;
 
+   /* layout */
+  --content-max: 1200px;
+  --gutter: clamp(20px, 4vw, 48px);
+
   /* brand accents — sampled from the logo. blue = wayfinding/labels, green = action only */
   --brand-blue: #6FC5F0;
   --brand-blue-solid: #1C8FD1;
@@ -46,6 +50,15 @@ ul { list-style: none; }
 .mono { font-family: var(--font-mono); }
 
 .container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+/* Full-bleed band + centered inner content — replaces the old .site
+   max-width wrapper, which capped the ENTIRE page (nav/hero/footer bands
+   included) instead of just the content inside them. */
+.wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
 
 @media (max-width: 860px) {
   .container { padding: 0 20px; }
