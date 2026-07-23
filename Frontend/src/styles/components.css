@@ -45,16 +45,27 @@
   max-width: 45vw; /* keep it from dominating on narrower viewports */
 }
 .pagehead > .wrap { padding-top: clamp(40px, 6vw, 56px); padding-bottom: clamp(40px, 6vw, 56px); }
+.pagehead > .wrap { position: relative; }
+.pagehead .hero-globe {
+  position: absolute;
+  top: 50%;
+  right: -80px;
+  transform: translateY(-50%);
+  width: 360px;
+  height: 360px;
+  max-width: 45vw;
+}
 .pagehead .in { position: relative; z-index: 1; }
 .pagehead .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 10px; display: block; }
 .pagehead h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 4vw, 36px); text-transform: uppercase; letter-spacing: -0.01em; }
 
 .hero { position: relative; overflow: hidden; background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-alt) 55%, var(--bg-navy) 100%); }
 .hero > .wrap { padding-top: clamp(64px, 10vw, 110px); padding-bottom: clamp(50px, 7vw, 90px); }
+.hero > .wrap { position: relative; }
 .hero .hero-globe {
   position: absolute;
   top: 50%;
-  right: -180px;
+  right: -80px;
   transform: translateY(-50%);
   width: 480px;
   height: 480px;
