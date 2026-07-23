@@ -1,0 +1,6 @@
+{
+  "name": "Luxus Consult International",
+  "description": "Luxus Consult International Ltd website and administration portal",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

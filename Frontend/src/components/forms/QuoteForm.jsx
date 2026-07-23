@@ -54,65 +54,69 @@ export default function QuoteForm({ presetService = "" }) {
         </div>
       </div>
 
-      <div className="field">
-        <label>Phone number<span className="req">*</span></label>
-        <input placeholder="+256 123 456 789" {...register("phone")} />
-        {errors.phone && <div className="error">{errors.phone.message}</div>}
+      <div className="form-grid">
+        <div className="field">
+          <label>Phone number<span className="req">*</span></label>
+          <input placeholder="+256 123 456 789" {...register("phone")} />
+          {errors.phone && <div className="error">{errors.phone.message}</div>}
+        </div>
+        <div className="field">
+          <label>Email<span className="req">*</span></label>
+          <input type="email" {...register("email")} />
+          {errors.email && <div className="error">{errors.email.message}</div>}
+        </div>
       </div>
 
-      <div className="field">
-        <label>Email<span className="req">*</span></label>
-        <input type="email" {...register("email")} />
-        {errors.email && <div className="error">{errors.email.message}</div>}
+      <div className="form-grid">
+        <div className="field">
+          <label>Select company sector<span className="req">*</span></label>
+          <select {...register("companySector")} defaultValue="">
+            <option value="" disabled>Choose one</option>
+            {quoteFormOptions.companySector.map((opt) => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+          {errors.companySector && <div className="error">{errors.companySector.message}</div>}
+        </div>
+        <div className="field">
+          <label>Type of service<span className="req">*</span></label>
+          <select {...register("typeOfService")} defaultValue={presetService}>
+            <option value="" disabled>Choose one</option>
+            {quoteFormOptions.typeOfService.map((opt) => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+          {errors.typeOfService && <div className="error">{errors.typeOfService.message}</div>}
+        </div>
       </div>
 
-      <div className="field">
-        <label>Select company sector<span className="req">*</span></label>
-        <select {...register("companySector")} defaultValue="">
-          <option value="" disabled>Choose one</option>
-          {quoteFormOptions.companySector.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
-        {errors.companySector && <div className="error">{errors.companySector.message}</div>}
+      <div className="form-grid">
+        <div className="field">
+          <label>Company name<span className="req">*</span></label>
+          <input {...register("companyName")} />
+          {errors.companyName && <div className="error">{errors.companyName.message}</div>}
+        </div>
+        <div className="field">
+          <label>Company website</label>
+          <input {...register("companyWebsite")} />
+        </div>
       </div>
 
-      <div className="field">
-        <label>Type of service<span className="req">*</span></label>
-        <select {...register("typeOfService")} defaultValue={presetService}>
-          <option value="" disabled>Choose one</option>
-          {quoteFormOptions.typeOfService.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
-          ))}
-        </select>
-        {errors.typeOfService && <div className="error">{errors.typeOfService.message}</div>}
-      </div>
-
-      <div className="field">
-        <label>Company name<span className="req">*</span></label>
-        <input {...register("companyName")} />
-        {errors.companyName && <div className="error">{errors.companyName.message}</div>}
-      </div>
-
-      <div className="field">
-        <label>Company website</label>
-        <input {...register("companyWebsite")} />
-      </div>
-
-      <div className="field">
-        <label>Country<span className="req">*</span></label>
-        <input {...register("country")} />
-        {errors.country && <div className="error">{errors.country.message}</div>}
-      </div>
-
-      <div className="field">
-        <label>Number of employees</label>
-        <input {...register("numberOfEmployees")} />
+      <div className="form-grid">
+        <div className="field">
+          <label>Country<span className="req">*</span></label>
+          <input {...register("country")} />
+          {errors.country && <div className="error">{errors.country.message}</div>}
+        </div>
+        <div className="field">
+          <label>Number of employees</label>
+          <input {...register("numberOfEmployees")} />
+        </div>
       </div>
 
       <div className="field">
         <label>Company scope</label>
-        <textarea {...register("companyScope")} />
+        <textarea {...register("companyScope")} placeholder="Briefly describe the scope of work or technical specifications..." />
       </div>
 
       <div className="form-submit-row">

@@ -49,7 +49,7 @@ ul { list-style: none; }
 
 .mono { font-family: var(--font-mono); }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 0 48px; }
 
 /* Full-bleed band + centered inner content — replaces the old .site
    max-width wrapper, which capped the ENTIRE page (nav/hero/footer bands

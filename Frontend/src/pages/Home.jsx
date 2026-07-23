@@ -1,4 +1,3 @@
-import WireframeGlobe from "../components/ui/WireframeGlobe";
 import ServiceCard from "../components/ui/ServiceCard";
 import { services } from "../data/services";
 import { Link } from "react-router-dom";
@@ -10,24 +9,25 @@ export default function Home() {
   return (
     <>
       <div className="hero">
-        <WireframeGlobe className="hero-globe" />
-          <div className="wrap">
-            <div className="hero-inner">
-              <span className="eyebrow">Certification · engineering · compliance</span>
-              <h1>Built for the standards that build trust.</h1>
-              <p>
-                {company.shortName} partners with {company.accreditationPartner} to deliver
-                ISO certification, engineering design, and HSE compliance — hassle-free,
-                from audit to accreditation.
-              </p>
+        <div className="wrap">
+          <div className="hero-inner">
+            <span className="eyebrow">Certification · engineering · compliance</span>
+            <h1>Built for the standards that build trust.</h1>
+            <p>
+              {company.shortName} partners with {company.accreditationPartner} to deliver
+              ISO certification, engineering design, and HSE compliance — hassle-free,
+              from audit to accreditation.
+            </p>
+            <div className="hero-actions">
               <Link to="/contact?intent=quote" className="btn-primary">Get a quotation</Link>
               <Link to="/services" className="btn-ghost">Our services</Link>
-              <div className="hero-coverage mono">
-                 {isoCoverageTags.map((tag) => <span key={tag}>{tag}</span>)}
-              </div>
             </div>
-           </div>
-       </div>
+            <div className="hero-coverage mono">
+               {isoCoverageTags.map((tag) => <span key={tag}>{tag}</span>)}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="section">
         <div className="wrap">
