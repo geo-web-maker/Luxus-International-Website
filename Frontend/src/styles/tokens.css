@@ -18,8 +18,8 @@
   --text-faint: #5A6478;
 
    /* layout */
-  --content-max: 1200px;
-  --gutter: clamp(20px, 4vw, 48px);
+  --content-max: 1800px;
+  --gutter: clamp(24px, 4vw, 64px);
 
   /* brand accents — sampled from the logo. blue = wayfinding/labels, green = action only */
   --brand-blue: #6FC5F0;

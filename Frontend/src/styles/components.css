@@ -117,7 +117,7 @@
   z-index: 1;
 }
 
-.pagehead .in { position: relative; z-index: 1; max-width: 800px; }
+.pagehead .in { position: relative; z-index: 1; max-width: 100%; }
 .pagehead .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 10px; display: block; }
 .pagehead h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 4vw, 42px); text-transform: uppercase; letter-spacing: -0.01em; }
 
@@ -128,10 +128,10 @@
   position: relative;
   z-index: 1;
 }
-.hero-inner { position: relative; max-width: 760px; z-index: 1; }
+.hero-inner { position: relative; max-width: 1000px; z-index: 1; }
 .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); display: inline-block; margin-bottom: 16px; }
 .hero-inner h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 22px; text-transform: uppercase; }
-.hero-inner p { font-size: 17px; line-height: 1.65; color: var(--text-secondary); max-width: 580px; margin-bottom: 30px; }
+.hero-inner p { font-size: 17px; line-height: 1.65; color: var(--text-secondary); max-width: 800px; margin-bottom: 30px; }
 .hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .hero-coverage { position: relative; margin-top: 36px; display: flex; gap: 10px; flex-wrap: wrap; }
 .hero-coverage span { font-size: 11px; color: #A9B3C2; border: 1px solid var(--border-hairline-dashed); padding: 6px 12px; border-radius: 3px; background: rgba(16, 24, 42, 0.5); }
@@ -169,7 +169,7 @@
 .footer .hl { color: var(--brand-blue); }
 
 /* About page */
-.about-copy { padding: 48px 0 16px; max-width: 900px; }
+.about-copy { padding: 48px 0 16px; max-width: 100%; }
 .about-copy p { font-size: 15px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 16px; }
 .mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 0 0 48px; }
 .mv-grid h3 { font-family: var(--font-display); font-weight: 900; font-size: 18px; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 14px; }
