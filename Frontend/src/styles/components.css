@@ -90,27 +90,27 @@
 .footer .hl { color: var(--brand-blue); }
 
 /* About page */
-.about-copy { padding: 48px 48px 8px; max-width: 720px; }
+.about-copy { padding: 48px 0 8px; max-width: 720px; }
 .about-copy p { font-size: 14px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 14px; }
-.mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 0 48px 48px; }
+.mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 0 0 48px; }
 .mv-grid h3 { font-family: var(--font-display); font-weight: 900; font-size: 16px; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 12px; }
 .mv-grid p, .mv-grid li { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
 .mv-grid ul { padding-left: 18px; margin-top: 8px; }
 @media (max-width: 860px) { .mv-grid { grid-template-columns: 1fr; } }
 
 .about-links { display: flex; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); margin: 8px 0; }
-.about-links button { flex: 1; padding: 18px 48px; border-right: 1px solid var(--border-hairline); text-align: left; }
+.about-links button { flex: 1; padding: 18px 24px; border-right: 1px solid var(--border-hairline); text-align: left; }
 .about-links button:last-child { border-right: none; }
 .about-links button.on { background: var(--surface-raised); }
 .about-links button.on .t { color: var(--brand-blue); }
 .about-links .id { font-size: 11px; color: var(--brand-blue); margin-bottom: 6px; display: block; }
 .about-links .t { font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; }
-.about-panel { padding: 32px 48px 48px; border-bottom: 1px solid var(--border-hairline); }
+.about-panel { padding: 32px 0 48px; border-bottom: 1px solid var(--border-hairline); }
 .about-panel p, .about-panel li { font-size: 14px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 12px; }
 .about-panel ul { padding-left: 18px; }
 
 /* Service detail */
-.detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; padding: 48px; }
+.detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; padding: 48px 0; }
 @media (max-width: 960px) { .detail-grid { grid-template-columns: 1fr; } }
 .detail-placeholder { width: 100%; height: 280px; border-radius: 4px; margin-bottom: 24px; background: repeating-linear-gradient(135deg, #16213A 0, #16213A 2px, transparent 2px, transparent 14px); border: 1px dashed var(--border-hairline-dashed); display: flex; align-items: center; justify-content: center; }
 .detail-placeholder span { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-align: center; padding: 0 20px; }
@@ -134,7 +134,7 @@
 /* Contact page */
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; }
 @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
-.contact-info { padding: 56px 48px; }
+.contact-info { padding: 56px 0; }
 .contact-info .row { padding: 16px 0; border-bottom: 1px solid var(--border-hairline); }
 .contact-info .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
 .contact-info .value { font-size: 15px; }
@@ -142,11 +142,11 @@
 .contact-map span { font-size: 11px; color: var(--text-muted); }
 
 /* Career page */
-.search-bar { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; padding: 0 48px 24px; }
+.search-bar { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; padding: 0 0 24px; }
 @media (max-width: 700px) { .search-bar { grid-template-columns: 1fr; } }
 .search-bar input { background: var(--surface-raised); border: 1px solid var(--border-hairline); color: var(--text-primary); padding: 12px 14px; font-size: 13px; border-radius: 3px; }
-.filters { display: flex; gap: 16px; padding: 0 48px 24px; font-size: 12px; color: #9AA5B5; flex-wrap: wrap; }
-.empty { margin: 0 48px 48px; border: 1px dashed var(--border-hairline); padding: 40px; text-align: center; font-size: 13px; color: var(--text-muted); }
+.filters { display: flex; gap: 16px; padding: 0 0 24px; font-size: 12px; color: #9AA5B5; flex-wrap: wrap; }
+.empty { margin: 0 0 48px; border: 1px dashed var(--border-hairline); padding: 40px; text-align: center; font-size: 13px; color: var(--text-muted); }
 
 /* Forms (Contact + Quote + Job Application) */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
