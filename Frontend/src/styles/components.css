@@ -25,7 +25,6 @@
 
 .pagehead {
   position: relative;
-  padding: 56px 48px;
   overflow: hidden;
   border-bottom: 1px solid var(--border-hairline);
   background: linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-alt) 60%, var(--bg-navy) 100%);

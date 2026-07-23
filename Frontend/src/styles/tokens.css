@@ -60,10 +60,6 @@ ul { list-style: none; }
   padding: 0 var(--gutter);
 }
 
-@media (max-width: 860px) {
-  .container { padding: 0 20px; }
-}
-
 /* visible keyboard focus, kept even where components override outline */
 :focus-visible {
   outline: 2px solid var(--brand-blue);
