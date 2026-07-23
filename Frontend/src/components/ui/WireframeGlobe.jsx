@@ -1,9 +1,9 @@
-export default function WireframeGlobe({ size = 760, opacity = 0.16, className = "" }) {
+export default function WireframeGlobe({ opacity = 0.16, className = "" }) {
   return (
     <svg
       className={className}
       viewBox="0 0 400 400"
-      style={{ width: size, height: size, opacity, pointerEvents: "none" }}
+      style={{ opacity, pointerEvents: "none" }}
       aria-hidden="true"
     >
       <circle cx="200" cy="200" r="180" fill="none" stroke="var(--brand-blue)" strokeWidth="1.5" />

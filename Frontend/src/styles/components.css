@@ -23,6 +23,11 @@
 .btn-primary { background: var(--brand-green); color: #fff; font-size: 13px; font-weight: 700; padding: 14px 26px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; }
 .btn-ghost { border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 13px; font-weight: 600; padding: 13px 26px; border-radius: 3px; margin-left: 12px; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; }
 
+/* Base/fallback size — WireframeGlobe no longer sets width/height inline,
+   so this is what applies if a page ever forgets a more specific class. */
+.hero-globe { width: 480px; height: 480px; }
+
+
 .pagehead {
   position: relative;
   overflow: hidden;
