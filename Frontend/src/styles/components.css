@@ -50,54 +50,62 @@
 .btn-primary { background: var(--brand-green); color: #fff; font-size: 13px; font-weight: 700; padding: 14px 26px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; text-align: center; }
 .btn-ghost { border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 13px; font-weight: 600; padding: 13px 26px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.02em; display: inline-block; text-align: center; }
 
-/* Page header & Hero — Technical CAD Blueprint Grid / Precision Mesh background */
-.pagehead,
-.hero {
+/* Interior page header — unchanged: static CAD blueprint grid */
+.pagehead {
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid var(--border-hairline);
   background-color: var(--bg-navy);
   background-image: 
-    /* Ambient radial blue illumination */
     radial-gradient(circle at 82% 40%, rgba(28, 143, 209, 0.18) 0%, rgba(12, 21, 36, 0) 65%),
-    /* Major grid lines (60px mesh) */
     linear-gradient(to right, rgba(111, 197, 240, 0.09) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(111, 197, 240, 0.09) 1px, transparent 1px),
-    /* Minor precision sub-grid (15px mesh) */
     linear-gradient(to right, rgba(111, 197, 240, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(111, 197, 240, 0.03) 1px, transparent 1px),
-    /* Base navy atmospheric gradient */
     linear-gradient(135deg, var(--bg-navy) 0%, var(--bg-navy-alt) 60%, var(--bg-navy) 100%);
   background-size: 
-    100% 100%,
-    60px 60px,
-    60px 60px,
-    15px 15px,
-    15px 15px,
-    100% 100%;
+    100% 100%, 60px 60px, 60px 60px, 15px 15px, 15px 15px, 100% 100%;
   background-position: 
-    center,
-    -1px -1px,
-    -1px -1px,
-    -1px -1px,
-    -1px -1px,
-    center;
+    center, -1px -1px, -1px -1px, -1px -1px, -1px -1px, center;
   min-height: 0;
 }
 
-/* Homepage hero only: a slow "breathing" version of the existing ambient
-   blue glow (same radial-gradient already used in the CAD grid background
-   above — this does not introduce a new color or a literal gradient/particle
-   port from the old site, just brings the existing glow to life). Sits
-   between the static background (on .hero itself) and the content (.wrap,
-   z-index:1), so it never interferes with text contrast. */
+/* Homepage hero — live animated background, mirroring the old localhost
+   site's mechanic (a shifting multi-stop gradient behind everything) but
+   built only from colors already approved in the brief: navy + brand blue
+   + brand green. No new hues, no teal/purple. */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-hairline);
+  background: linear-gradient(
+    -45deg,
+    var(--bg-navy) 0%,
+    var(--bg-navy-alt) 30%,
+    #103A55 55%,
+    #0F3D2C 75%,
+    var(--bg-navy) 100%
+  );
+  background-size: 400% 400%;
+  animation: hero-gradient-shift 18s ease infinite;
+  min-height: 0;
+}
+
+@keyframes hero-gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Slow-drifting radial highlight on top of the gradient — the second layer
+   the old site had (gradient + a separate glow), same idea here. */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(circle at 82% 40%, rgba(28, 143, 209, 0.22) 0%, rgba(12, 21, 36, 0) 60%);
+  background-image: radial-gradient(circle at 82% 40%, rgba(111, 197, 240, 0.25) 0%, rgba(12, 21, 36, 0) 60%);
   animation: hero-glow-breathe 9s ease-in-out infinite;
 }
 
@@ -106,10 +114,10 @@
   50% { opacity: 1; transform: scale(1.08); }
 }
 
-/* Live mesh canvas (<HeroParticles>) — this is the "alive" element carried
-   over from the old site's particle background, restyled as a wireframe
+/* Live mesh canvas (<HeroParticles>) — the "alive" element carried over
+   from the old site's particle background, restyled as a wireframe
    survey/network mesh (brand blue only, slow, quiet) rather than a generic
-   floating-dot effect. Sits above the glow, below the text content. */
+   floating-dot effect. Sits above the gradient/glow, below the text. */
 .hero-particles {
   position: absolute;
   inset: 0;
@@ -117,9 +125,9 @@
   display: block;
 }
 
-/* Technical Datum Label — Site-Related Tag */
-.pagehead::after,
-.hero::after {
+/* Technical Datum Label — Site-Related Tag (interior pages only now; the
+   homepage hero has its own distinct look, so it doesn't need this too) */
+.pagehead::after {
   content: "+ LUXUS INTERNATIONAL CONSULT // CERTIFICATION & ENGINEERING";
   position: absolute;
   right: clamp(16px, 4vw, 48px);
@@ -136,8 +144,7 @@
 
 /* Hide CAD datum tag on mobile screens for a cleaner header */
 @media (max-width: 768px) {
-  .pagehead::after,
-  .hero::after {
+  .pagehead::after {
     display: none !important;
   }
 }
@@ -153,37 +160,80 @@
 .pagehead .eyebrow { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 10px; display: block; }
 .pagehead h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(28px, 4vw, 42px); text-transform: uppercase; letter-spacing: -0.01em; }
 
+/* Still used by <PageHeader> on interior pages (Services/About/Contact/etc.) */
+.eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); display: inline-block; margin-bottom: 16px; }
+
 /* Hero section */
 .hero > .wrap {
-  padding-top: clamp(64px, 8.5vw, 112px);
-  padding-bottom: clamp(64px, 8.5vw, 112px);
+  padding-top: clamp(72px, 10vw, 128px);
+  padding-bottom: clamp(72px, 10vw, 128px);
   position: relative;
   z-index: 1;
 }
-.hero-inner { position: relative; max-width: 1000px; z-index: 1; }
+.hero-inner { position: relative; max-width: 1000px; z-index: 1; text-align: center; margin: 0 auto; }
 
-/* Small bilingual welcome line — carried over from the client's original
-   site voice ("Karibu kwa" / "Welcome to"), restyled to sit quietly above
-   the eyebrow rather than as a large teal headline. */
-.hero-greeting { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; }
+/* Headline: rotating bilingual greeting + static company name — mirrors
+   the old site's H2 structure ("Karibu kwa / Welcome to" + company name)
+   1:1, restyled into this brand's Archivo/uppercase display type instead
+   of the old teal script-y treatment. */
+.hero-heading { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 20px; }
+.hero-greeting {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(15px, 2vw, 20px);
+  color: var(--brand-blue);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.hero-heading-name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(30px, 4.6vw, 56px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
 
-.eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); display: inline-block; margin-bottom: 16px; }
-.hero-inner h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 22px; text-transform: uppercase; }
-.hero-inner p { font-size: 17px; line-height: 1.65; color: var(--text-secondary); max-width: 800px; margin-bottom: 30px; }
+/* Typewriter tagline — mirrors the old site's typing/looping tagline
+   widget directly below the headline. Not monospace: per the brief, mono
+   is reserved for data-like content, and this is marketing copy. */
+.hero-typewriter-line {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(16px, 2.2vw, 22px);
+  color: var(--brand-blue);
+  min-height: 1.6em;
+  margin-bottom: 22px;
+}
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: var(--brand-blue);
+  vertical-align: -0.15em;
+  animation: typewriter-blink 0.9s step-end infinite;
+}
+@keyframes typewriter-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
 
-/* Rotating service/tagline line — the on-brand replacement for the old
-   site's teal typewriter widget. Plain text (not .mono): per the brief,
-   monospace is reserved for data-like content (codes/phone/paths), and
-   these are marketing phrases, not data. */
-.hero-rotating-line { font-size: 15px; font-weight: 600; color: var(--brand-blue); margin-top: -14px; margin-bottom: 30px; min-height: 1.4em; }
+.hero-sub { font-size: 16px; line-height: 1.65; color: var(--text-secondary); max-width: 640px; margin: 0 auto 30px; }
+.hero-actions { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
 
-.hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.hero-coverage { position: relative; margin-top: 36px; display: flex; gap: 10px; flex-wrap: wrap; }
+/* ISO coverage tags — moved out of the hero itself (see Home.jsx) so the
+   hero can match the original structure exactly; this thin strip keeps
+   them as the very next thing under the fold. */
+.hero-coverage-strip { background: var(--surface-raised); border-bottom: 1px solid var(--border-hairline); padding: 16px 0; }
+.hero-coverage { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .hero-coverage span { font-size: 11px; color: #A9B3C2; border: 1px solid var(--border-hairline-dashed); padding: 6px 12px; border-radius: 3px; background: rgba(16, 24, 42, 0.5); }
 
-/* Shared rotator: crossfade + slight rise, used by both .hero-greeting and
-   .hero-rotating-line via the <HeroRotator> component. One mechanism, two
-   presentations — same pattern as the rest of the design system. */
+/* Shared rotator: crossfade + slight rise, used by <HeroRotator> for the
+   bilingual greeting line. */
 .hero-rotator { display: inline-block; }
 .hero-rotator-word {
   display: inline-block;
