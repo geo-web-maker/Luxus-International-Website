@@ -6,6 +6,13 @@ import { useContent } from "../hooks/useContent";
 
 const filterOptions = ["Freelance", "Full time", "Part time", "Internship", "Temporary"];
 
+// Normalizes both sides so "Full Time" (backend) matches "Full time"
+// (checkbox label) regardless of spacing/case differences.
+function normalizeType(str) {
+  return (str || "").toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+
 export default function Career() {
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
@@ -16,15 +23,19 @@ export default function Career() {
   const { data: jobs, loading, error } = useJobs({ keyword, location, filled: false });
   const { data: content } = useContent();
 
+  const toggleFilter = (f) => {
+   setActiveFilters((prev) => {
+     const next = new Set(prev);
+     if (next.has(f)) { next.delete(f); } else { next.add(f); }
+     return next;
+    });
+  };
 
-  const results = jobs || [];
+  // Client-side pass over the already-fetched page: activeFilters is a
+ // small fixed checkbox set, not worth a server round-trip per toggle.
+  const normalizedActive = new Set([...activeFilters].map(normalizeType));
+  const results = (jobs || []).filter((j) => normalizedActive.has(normalizeType(j.type)));
   const company = content?.company;
-
-  const results = jobs.filter((j) => {
-    const matchesKeyword = keyword === "" || j.title.toLowerCase().includes(keyword.toLowerCase());
-    const matchesLocation = location === "" || j.location.toLowerCase().includes(location.toLowerCase());
-    return matchesKeyword && matchesLocation && !j.filled;
-  });
 
   return (
     <>

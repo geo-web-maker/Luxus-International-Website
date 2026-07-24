@@ -1,7 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import ServiceCard from "../components/ui/ServiceCard";
-import { findServiceByPath } from "../data/services";
 import { findServiceByPath } from "../lib/api";
 import { useServices } from "../hooks/useServices";
 
