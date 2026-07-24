@@ -2,12 +2,34 @@ import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import ServiceCard from "../components/ui/ServiceCard";
 import { findServiceByPath } from "../data/services";
+import { findServiceByPath } from "../lib/api";
+import { useServices } from "../hooks/useServices";
 
 export default function ServiceDetail() {
   const params = useParams();
   const splat = params["*"] || "";
   const fullPath = `/ser/${splat}`;
-  const result = findServiceByPath(fullPath);
+  const { data: services, loading, error } = useServices();
+
+  if (loading) {
+    return (
+      <>
+        <PageHeader eyebrow={fullPath} title="Loading…" />
+        <div className="section"><div className="wrap">Loading…</div></div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <PageHeader eyebrow={fullPath} title="Error" />
+        <div className="section"><div className="wrap">Couldn't load services: {error.message}</div></div>
+      </>
+    );
+  }
+
+  const result = findServiceByPath(services, fullPath);
 
   if (!result) {
     return (
@@ -16,9 +38,7 @@ export default function ServiceDetail() {
         <div className="section">
           <div className="wrap">
           <p style={{ color: "var(--text-secondary)" }}>
-            No service matches <span className="mono">{fullPath}</span>. Check
-            <span className="mono"> src/data/services.js</span> — this data is
-            still a first-pass extraction, not the final content.
+            No service matches <span className="mono">{fullPath}</span>.
           </p>
         </div>
       </div>

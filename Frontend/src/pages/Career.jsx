@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
-import { jobs } from "../data/jobs";
-import { company } from "../data/siteContent";
+import { useJobs } from "../hooks/useJobs";
+import { useContent } from "../hooks/useContent";
 
 const filterOptions = ["Freelance", "Full time", "Part time", "Internship", "Temporary"];
 
@@ -11,13 +11,14 @@ export default function Career() {
   const [location, setLocation] = useState("");
   const [activeFilters, setActiveFilters] = useState(new Set(filterOptions));
 
-  const toggleFilter = (f) => {
-    setActiveFilters((prev) => {
-      const next = new Set(prev);
-      if (next.has(f)) { next.delete(f); } else { next.add(f); }
-      return next;
-    });
-  };
+  // Server-side search: keyword/location/filled are now query params on
+  // GET /api/jobs (see backend Phase 3) instead of an in-memory .filter().
+  const { data: jobs, loading, error } = useJobs({ keyword, location, filled: false });
+  const { data: content } = useContent();
+
+
+  const results = jobs || [];
+  const company = content?.company;
 
   const results = jobs.filter((j) => {
     const matchesKeyword = keyword === "" || j.title.toLowerCase().includes(keyword.toLowerCase());
@@ -58,10 +59,14 @@ export default function Career() {
           ))}
         </div>
 
-        {results.length === 0 ? (
+       {loading ? (
+          <div className="empty">Loading…</div>
+        ) : error ? (
+          <div className="empty">Couldn't load jobs: {error.message}</div>
+        ) : results.length === 0 ? (
           <div className="empty">
             No open positions right now — check back soon, or send your CV to{" "}
-            <span className="mono" style={{ color: "var(--brand-blue)" }}>{company.email}</span>
+            <span className="mono" style={{ color: "var(--brand-blue)" }}>{company?.email}</span>
           </div>
         ) : (
           <div className="section" style={{ paddingTop: 0 }}>

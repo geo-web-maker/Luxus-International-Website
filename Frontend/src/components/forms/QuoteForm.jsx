@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { quoteFormOptions } from "../../data/siteContent";
+import { request } from "../../lib/apiClient";
 
 const schema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -20,16 +21,23 @@ const schema = z.object({
 
 export default function QuoteForm({ presetService = "" }) {
   const [submitted, setSubmitted] = useState(false);
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const {
+    register,
+     handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({{
     resolver: zodResolver(schema),
     defaultValues: { typeOfService: presetService },
   });
 
   const onSubmit = async (data) => {
-    // TODO: wire to FastAPI POST /api/quote-requests once backend is live
-    console.log("quote request submit", data);
-    await new Promise((r) => setTimeout(r, 400));
-    setSubmitted(true);
+    try {
+      await request("/quote-requests", { method: "POST", body: JSON.stringify(data) });
+      setSubmitted(true);
+    } catch (err) {
+      setError("root", { message: err.message });
+    }
   };
 
   if (submitted) {
@@ -42,6 +50,7 @@ export default function QuoteForm({ presetService = "" }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    {errors.root && <div className="error" style={{ marginBottom: 16 }}>{errors.root.message}</div>}
       <div className="form-grid">
         <div className="field">
           <label>Customer's name — first<span className="req">*</span></label>

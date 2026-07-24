@@ -1,11 +1,30 @@
 import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import JobApplicationForm from "../components/forms/JobApplicationForm";
-import { jobs } from "../data/jobs";
+import { useJobs } from "../hooks/useJobs";
 
 export default function JobDetail() {
   const { jobId } = useParams();
-  const job = jobs.find((j) => j.id === jobId);
+  const { data: jobs, loading, error } = useJobs();
+  const job = jobs?.find((j) => j.id === jobId);
+
+  if (loading) {
+    return (
+      <>
+        <PageHeader eyebrow="/career" title="Loading…" />
+        <div className="wrap"><div className="section">Loading…</div></div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <PageHeader eyebrow="/career" title="Error" />
+        <div className="wrap"><div className="section">Couldn't load job: {error.message}</div></div>
+      </>
+    );
+  }
 
   if (!job) {
     return (
@@ -34,7 +53,7 @@ export default function JobDetail() {
           <div className="sidebar">
             <h3>Apply now</h3>
             <span className="sub mono">/career/{job.id}/apply</span>
-            <JobApplicationForm jobTitle={job.title} />
+            <JobApplicationForm jobId={job.id} jobTitle={job.title} />
           </div>
         </div>
       </div>

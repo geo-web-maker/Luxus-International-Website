@@ -2,9 +2,9 @@ import ServiceCard from "../components/ui/ServiceCard";
 import HeroRotator from "../components/HeroRotator/HeroRotator";
 import TypewriterText from "../components/TypewriterText/TypewriterText";
 import HeroParticles from "../components/HeroParticles/HeroParticles";
-import { services } from "../data/services";
 import { Link } from "react-router-dom";
-import { company, isoCoverageTags, quoteFormOptions } from "../data/siteContent";
+import { useServices } from "../hooks/useServices";
+import { useContent } from "../hooks/useContent";
 
 // Typed/rotated in the hero tagline — real content only: the client's own
 // tagline, the previously-approved headline copy, and real service lines
@@ -16,6 +16,14 @@ const heroTypewriterPhrases = [
 ];
 
 export default function Home() {
+  const { data: services, loading: servicesLoading } = useServices();
+  const { data: content, loading: contentLoading } = useContent();
+
+  if (servicesLoading || contentLoading) {
+    return <div className="section"><div className="wrap">Loading…</div></div>;
+  }
+
+  const { company, isoCoverageTags } = content;
   const teaserServices = services.slice(0, 3);
 
   return (

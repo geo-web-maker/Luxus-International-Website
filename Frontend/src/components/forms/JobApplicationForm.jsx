@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { request } from "../../lib/apiClient";
 
 // Field set and labels are a direct match to the extracted WP Job Manager
 // _form_fields schema — do not rename without checking that source again.
@@ -16,17 +17,33 @@ const schema = z.object({
     .refine((files) => files?.length === 1, "CV upload is required"),
 });
 
-export default function JobApplicationForm({ jobTitle }) {
+export default function JobApplicationForm({ jobId, jobTitle }) {
   const [submitted, setSubmitted] = useState(false);
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
     resolver: zodResolver(schema),
   });
 
   const onSubmit = async (data) => {
-    // TODO: wire to FastAPI POST /api/job-applications (multipart, CV -> R2) once backend is live
-    console.log("job application submit", { ...data, jobTitle });
-    await new Promise((r) => setTimeout(r, 400));
-    setSubmitted(true);
+    try {
+      const formData = new FormData();
+      formData.append("full_name", data.fullName);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+      formData.append("region", data.region);
+      formData.append("message", data.message);
+      if (jobId) formData.append("job_id", jobId);
+      formData.append("cv", data.cv[0]);
+
+      await request("/job-applications", { method: "POST", body: formData });
+      setSubmitted(true);
+    } catch (err) {
+      setError("root", { message: err.message });
+    }
   };
 
   if (submitted) {
@@ -40,6 +57,7 @@ export default function JobApplicationForm({ jobTitle }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      {errors.root && <div className="error" style={{ marginBottom: 16 }}>{errors.root.message}</div>}
       <div className="field">
         <label>Full name<span className="req">*</span></label>
         <input {...register("fullName")} />

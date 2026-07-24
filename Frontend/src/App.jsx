@@ -7,20 +7,45 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Career from "./pages/Career";
 import JobDetail from "./pages/JobDetail";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminServices from "./pages/admin/AdminServices";
+import AdminJobs from "./pages/admin/AdminJobs";
+import AdminContent from "./pages/admin/AdminContent";
+import AdminSubmissions from "./pages/admin/AdminSubmissions";
 
 export default function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        {/* splat route resolves any depth, e.g. /services/msc or /services/msc/envms */}
-        <Route path="/services/*" element={<ServiceDetail />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/career" element={<Career />} />
-        <Route path="/career/:jobId" element={<JobDetail />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      {/* Admin routes render outside <Layout> — no public header/footer. */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="services" element={<AdminServices />} />
+        <Route path="jobs" element={<AdminJobs />} />
+        <Route path="content" element={<AdminContent />} />
+        <Route path="submissions" element={<AdminSubmissions />} />
+      </Route>
+
+      {/* Public site, wrapped in the shared Layout */}
+      <Route
+        path="/*"
+        element={
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              {/* splat route resolves any depth, e.g. /services/msc or /services/msc/envms */}
+              <Route path="/services/*" element={<ServiceDetail />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/career" element={<Career />} />
+              <Route path="/career/:jobId" element={<JobDetail />} />
+            </Routes>
+          </Layout>
+        }
+      />
+    </Routes>
   );
 }
