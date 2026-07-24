@@ -85,6 +85,38 @@
   min-height: 0;
 }
 
+/* Homepage hero only: a slow "breathing" version of the existing ambient
+   blue glow (same radial-gradient already used in the CAD grid background
+   above — this does not introduce a new color or a literal gradient/particle
+   port from the old site, just brings the existing glow to life). Sits
+   between the static background (on .hero itself) and the content (.wrap,
+   z-index:1), so it never interferes with text contrast. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 82% 40%, rgba(28, 143, 209, 0.22) 0%, rgba(12, 21, 36, 0) 60%);
+  animation: hero-glow-breathe 9s ease-in-out infinite;
+}
+
+@keyframes hero-glow-breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* Live mesh canvas (<HeroParticles>) — this is the "alive" element carried
+   over from the old site's particle background, restyled as a wireframe
+   survey/network mesh (brand blue only, slow, quiet) rather than a generic
+   floating-dot effect. Sits above the glow, below the text content. */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+
 /* Technical Datum Label — Site-Related Tag */
 .pagehead::after,
 .hero::after {
@@ -129,12 +161,38 @@
   z-index: 1;
 }
 .hero-inner { position: relative; max-width: 1000px; z-index: 1; }
+
+/* Small bilingual welcome line — carried over from the client's original
+   site voice ("Karibu kwa" / "Welcome to"), restyled to sit quietly above
+   the eyebrow rather than as a large teal headline. */
+.hero-greeting { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 10px; }
+
 .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-blue); display: inline-block; margin-bottom: 16px; }
 .hero-inner h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(34px, 4.4vw, 58px); line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 22px; text-transform: uppercase; }
 .hero-inner p { font-size: 17px; line-height: 1.65; color: var(--text-secondary); max-width: 800px; margin-bottom: 30px; }
+
+/* Rotating service/tagline line — the on-brand replacement for the old
+   site's teal typewriter widget. Plain text (not .mono): per the brief,
+   monospace is reserved for data-like content (codes/phone/paths), and
+   these are marketing phrases, not data. */
+.hero-rotating-line { font-size: 15px; font-weight: 600; color: var(--brand-blue); margin-top: -14px; margin-bottom: 30px; min-height: 1.4em; }
+
 .hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .hero-coverage { position: relative; margin-top: 36px; display: flex; gap: 10px; flex-wrap: wrap; }
 .hero-coverage span { font-size: 11px; color: #A9B3C2; border: 1px solid var(--border-hairline-dashed); padding: 6px 12px; border-radius: 3px; background: rgba(16, 24, 42, 0.5); }
+
+/* Shared rotator: crossfade + slight rise, used by both .hero-greeting and
+   .hero-rotating-line via the <HeroRotator> component. One mechanism, two
+   presentations — same pattern as the rest of the design system. */
+.hero-rotator { display: inline-block; }
+.hero-rotator-word {
+  display: inline-block;
+  animation: hero-rotator-in 0.5s ease both;
+}
+@keyframes hero-rotator-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .section > .wrap,
 .section.wrap {
