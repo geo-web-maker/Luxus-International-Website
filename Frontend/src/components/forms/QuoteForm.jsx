@@ -26,7 +26,7 @@ export default function QuoteForm({ presetService = "" }) {
      handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm({{
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { typeOfService: presetService },
   });
