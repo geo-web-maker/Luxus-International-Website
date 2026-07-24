@@ -25,7 +25,6 @@ export default function Home() {
     ...quoteFormOptions.typeOfService.slice(0, 4),
   ];
   
-  const { company, isoCoverageTags } = content;
   const teaserServices = services.slice(0, 3);
 
   return (
