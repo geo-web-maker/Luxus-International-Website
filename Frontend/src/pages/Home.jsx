@@ -9,7 +9,6 @@ import { quoteFormOptions } from "../data/siteContent";
 
 export default function Home() {
   const { data: services, loading: servicesLoading } = useServices();
-  const { data: content, loading: contentLoading } = useContent();
   const { data: content, loading: contentLoading, error: contentError } = useContent();
   
   if (servicesLoading || contentLoading) {
