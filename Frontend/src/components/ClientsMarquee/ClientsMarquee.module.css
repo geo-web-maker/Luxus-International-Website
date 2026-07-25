@@ -51,7 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 26px 34px;
+  padding: 10px 14px;
   border-radius: 8px;
   background: #EFEDE7; /* warm off-white — avoids pure-#fff glare on the dark bg */
   border: 1px solid var(--border-hairline);
@@ -71,11 +71,11 @@
 }
 
 @media (max-width: 1100px) {
-  .chip { width: 200px; height: 116px; padding: 20px 26px; }
+  .chip { width: 200px; height: 116px; padding: 8px 10px; }
 }
 
 @media (max-width: 640px) {
-  .chip { width: 148px; height: 88px; padding: 14px 18px; }
+  .chip { width: 148px; height: 88px; padding: 6px 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
