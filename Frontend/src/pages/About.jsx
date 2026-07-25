@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PageHeader from "../components/layout/PageHeader";
-import { useContent } from "../hooks/useContent"; 
+import { company } from "../data/siteContent";
 
 export default function About() {
   const [activeTab, setActiveTab] = useState("values");
