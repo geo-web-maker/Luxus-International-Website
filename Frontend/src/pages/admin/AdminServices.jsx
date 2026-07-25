@@ -167,6 +167,7 @@ function BenefitsEditor({ benefits, onChange }) {
 
 function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
   const [name, setName] = useState(initial?.name || "");
+  const [shortName, setShortName] = useState(initial?.shortName || "");
   const [standardCode, setStandardCode] = useState(initial?.standardCode || "");
   const [note, setNote] = useState(initial?.note || "");
   const [benefits, setBenefits] = useState(initial?.benefits || []);
@@ -182,7 +183,13 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
     setSaving(true);
     setError(null);
     try {
-      const payload = { name, standardCode: standardCode || undefined, note: note || undefined, benefits };
+      const payload = {
+        name,
+        shortName: shortName || undefined,
+        standardCode: standardCode || undefined,
+        note: note || undefined,
+        benefits,
+      };
       if (isEdit) {
         await onSave(payload);
       } else {
@@ -216,6 +223,14 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
         <div className="field">
           <label>Name<span className="req">*</span></label>
           <input value={name} onChange={(e) => setName(e.target.value)} required />
+        </div>
+        <div className="field">
+          <label>Short name</label>
+          <input
+            placeholder="Used on cards in place of the full name"
+            value={shortName}
+            onChange={(e) => setShortName(e.target.value)}
+          />
         </div>
         <div className="field">
           <label>Standard code</label>

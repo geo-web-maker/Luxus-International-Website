@@ -28,6 +28,7 @@ class ServiceChildIn(CamelModel):
     slug: str
     path: str
     name: str
+    short_name: str | None = None
     standard_code: str | None = None
     note: str | None = None
     benefits: list[Benefit] | None = None
@@ -39,6 +40,7 @@ class ServiceChildUpdate(CamelModel):
 
     path: str | None = None
     name: str | None = None
+    short_name: str | None = None
     standard_code: str | None = None
     note: str | None = None
     benefits: list[Benefit] | None = None

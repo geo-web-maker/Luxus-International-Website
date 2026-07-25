@@ -61,7 +61,11 @@ export default function ServiceDetail() {
                 <ServiceCard
                   key={child.slug}
                   path={child.path}
-                  name={child.standardCode ? `${child.standardCode} — ${child.name}` : child.name}
+                  name={
+                    child.shortName
+                      ? (child.standardCode ? `${child.standardCode} — ${child.shortName}` : child.shortName)
+                      : (child.standardCode ? `${child.standardCode} — ${child.name}` : child.name)
+                  }
                   image={child.image}
                 />
               ))}

@@ -19,6 +19,7 @@ class ServiceChild(BaseModel):
     slug: str
     path: str
     name: str
+    short_name: str | None = None
     standard_code: str | None = None
     note: str | None = None
     benefits: list[Benefit] | None = None
