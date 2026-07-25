@@ -51,6 +51,8 @@ function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
   const [name, setName] = useState(initial?.name || "");
   const [shortName, setShortName] = useState(initial?.shortName || "");
   const [summary, setSummary] = useState(initial?.summary || "");
+  const [slug, setSlug] = useState(initial?.slug || "");
+  const [slugTouched, setSlugTouched] = useState(false);
   const [image, setImage] = useState(initial?.image || null);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -66,7 +68,8 @@ function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
       if (isEdit) {
         await onSave({ name, shortName, summary });
       } else {
-        await onSave({ slug: slugify(name), path: `/ser/${slugify(name)}`, name, shortName, summary });
+        const finalSlug = slugTouched && slug ? slugify(slug) : slugify(name);
+        await onSave({ slug: finalSlug, path: `/ser/${finalSlug}`, name, shortName, summary });
       }
     } catch (err) {
       setError(err.message);
@@ -94,6 +97,20 @@ function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
         <label>Name<span className="req">*</span></label>
         <input value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
+      {!isEdit && (
+        <div className="field">
+          <label>URL slug</label>
+          <input
+            placeholder={name ? slugify(name) : "e.g. msc"}
+            value={slug}
+            onChange={(e) => { setSlug(e.target.value); setSlugTouched(true); }}
+          />
+          <div className="mono" style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 4 }}>
+            Keep this short — it's the link people see, e.g. /ser/msc. Leave blank to auto-generate
+            from the name. Can't be changed after saving.
+          </div>
+        </div>
+      )}
       <div className="field">
         <label>Short name</label>
         <input value={shortName} onChange={(e) => setShortName(e.target.value)} />
@@ -171,6 +188,8 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
   const [standardCode, setStandardCode] = useState(initial?.standardCode || "");
   const [note, setNote] = useState(initial?.note || "");
   const [benefits, setBenefits] = useState(initial?.benefits || []);
+  const [slug, setSlug] = useState(initial?.slug || "");
+  const [slugTouched, setSlugTouched] = useState(false);
   const [image, setImage] = useState(initial?.image || null);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -193,8 +212,8 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
       if (isEdit) {
         await onSave(payload);
       } else {
-        const slug = slugify(name);
-        await onSave({ slug, path: `${groupPath}/${slug}`, ...payload });
+        const finalSlug = slugTouched && slug ? slugify(slug) : slugify(name);
+        await onSave({ slug: finalSlug, path: `${groupPath}/${finalSlug}`, ...payload });
       }
     } catch (err) {
       setError(err.message);
@@ -227,7 +246,7 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
         <div className="field">
           <label>Short name</label>
           <input
-            placeholder="Used on cards in place of the full name"
+            placeholder="Optional internal label — not shown on cards"
             value={shortName}
             onChange={(e) => setShortName(e.target.value)}
           />
@@ -241,6 +260,20 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
           />
         </div>
       </div>
+      {!isEdit && (
+        <div className="field">
+          <label>URL slug</label>
+          <input
+            placeholder={name ? slugify(name) : "e.g. qms"}
+            value={slug}
+            onChange={(e) => { setSlug(e.target.value); setSlugTouched(true); }}
+          />
+          <div className="mono" style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 4 }}>
+            Keep this short — it's the link people see, e.g. {groupPath}/qms. Leave blank to
+            auto-generate from the name. Can't be changed after saving.
+          </div>
+        </div>
+      )}
       <div className="field">
         <label>Note</label>
         <input value={note} onChange={(e) => setNote(e.target.value)} />
