@@ -17,12 +17,14 @@ export default function ContentGrid({ heading, layout, items }) {
         {items.map((item) => (
           <div className="grid-item" key={item.id}>
             <ItemMedia media={item.media} alt={item.heading} />
-            <div className="grid-item-heading">{item.heading}</div>
-            {item.body && (
-              layout === "feature-rows"
-                ? <RichText text={item.body} />
-                : <div className="grid-item-body">{item.body}</div>
-            )}
+            <div className="grid-item-text">
+              <div className="grid-item-heading">{item.heading}</div>
+              {item.body && (
+                layout === "feature-rows"
+                  ? <RichText text={item.body} />
+                  : <div className="grid-item-body">{item.body}</div>
+              )}
+            </div>
           </div>
         ))}
       </div>
