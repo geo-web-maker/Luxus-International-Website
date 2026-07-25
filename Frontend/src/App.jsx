@@ -36,8 +36,9 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/services" element={<Services />} />
-              {/* splat route resolves any depth, e.g. /services/msc or /services/msc/envms */}
-              <Route path="/services/*" element={<ServiceDetail />} />
+              {/* splat route resolves any depth, e.g. /ser/msc or /ser/msc/envms —
+                  matches the `path` values stored in service group/child data. */}
+              <Route path="/ser/*" element={<ServiceDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/career" element={<Career />} />
