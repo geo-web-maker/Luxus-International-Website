@@ -65,6 +65,18 @@ export const servicesApi = {
   },
 };
 
+// ---- Generic uploads (images at arbitrary nested positions, e.g.
+// content-grid item icons/photos, that don't map to one fixed document
+// field a dedicated endpoint could target) --------------------------------
+
+export const uploadsApi = {
+  uploadImage: (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return request("/uploads/image", { method: "POST", body: formData });
+  },
+};
+
 // ---- Clients (logo cloud) ----------------------------------------------
 
 export const clientsApi = {

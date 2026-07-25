@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import ServiceCard from "../components/ui/ServiceCard";
+import SectionRenderer from "../components/ServiceSections/SectionRenderer";
 import { findServiceByPath } from "../lib/api";
 import { useServices } from "../hooks/useServices";
 
@@ -97,24 +98,11 @@ export default function ServiceDetail() {
                 </span>
               </div>
             )}
-            <p>
-              This is placeholder description text for {result.name}. Replace with the
-              real body content extracted from the WordPress export for this page.
-            </p>
-
-            {result.benefits && (
-              <>
-                <h3>Certification benefits</h3>
-                <div className="benefits">
-                  {result.benefits.map((b) => (
-                    <div className="benefit" key={b.id}>
-                      <span className="id mono">{b.id}</span>
-                      {b.label}
-                      <span className="icon-tag mono">{b.iconFile}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
+            <SectionRenderer sections={result.sections} />
+            {(!result.sections || result.sections.length === 0) && (
+              <p style={{ color: "var(--text-secondary)" }}>
+                ◻ No content sections yet — add some for "{result.slug}" in the admin panel.
+              </p>
             )}
           </div>
 

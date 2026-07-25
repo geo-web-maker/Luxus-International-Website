@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useServices } from "../../hooks/useServices";
-import { servicesApi, slugify } from "../../lib/api";
+import { servicesApi, slugify, uploadsApi } from "../../lib/api";
+import RichText from "../../components/ServiceSections/RichText";
 
 function Modal({ title, wide, onClose, children }) {
   return (
@@ -54,6 +55,7 @@ function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
   const [slug, setSlug] = useState(initial?.slug || "");
   const [slugTouched, setSlugTouched] = useState(false);
   const [image, setImage] = useState(initial?.image || null);
+  const [sections, setSections] = useState(initial?.sections || []);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -66,7 +68,7 @@ function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
     setError(null);
     try {
       if (isEdit) {
-        await onSave({ name, shortName, summary });
+        await onSave({ name, shortName, summary, sections });
       } else {
         const finalSlug = slugTouched && slug ? slugify(slug) : slugify(name);
         await onSave({ slug: finalSlug, path: `/ser/${finalSlug}`, name, shortName, summary });
@@ -129,6 +131,19 @@ function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
           </div>
         </div>
       )}
+      {isEdit ? (
+        <div className="field field-full">
+          <SectionsEditor sections={sections} onChange={setSections} />
+        </div>
+      ) : (
+        <div className="field field-full">
+          <label>Page content</label>
+          <div className="mono" style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+            Save the group first, then edit it to add content sections. Only needed if this group
+            has no sub-services and should show its own page (e.g. an "Asset Management" style page).
+          </div>
+        </div>
+      )}
       {error && <div className="error">{error}</div>}
       <div className="admin-modal-actions">
         <button type="button" className="btn-ghost" onClick={onCancel}>Cancel</button>
@@ -140,44 +155,202 @@ function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
   );
 }
 
-function BenefitsEditor({ benefits, onChange }) {
-  const list = benefits || [];
+function ItemMediaUploader({ media, onChange, label }) {
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+  const hasImage = media?.status === "confirmed" && media?.file;
 
-  const update = (index, field, value) => {
-    const next = list.map((b, i) => (i === index ? { ...b, [field]: value } : b));
+  const handleUpload = async (file) => {
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const { url } = await uploadsApi.uploadImage(file);
+      onChange({ status: "confirmed", file: url });
+    } catch (err) {
+      setUploadError(err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div style={{ marginBottom: 8 }}>
+      {hasImage ? (
+        <div style={{ background: "#EFEDE7", borderRadius: 4, padding: 6, display: "inline-block", marginBottom: 6 }}>
+          <img src={media.file} alt="" style={{ height: 40, display: "block" }} />
+        </div>
+      ) : (
+        <div className="filetag mono" style={{ marginBottom: 6 }}>◻ no {label} yet</div>
+      )}
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); }}
+        disabled={uploading}
+      />
+      {uploading && <div className="mono" style={{ fontSize: 11 }}>Uploading…</div>}
+      {uploadError && <div className="error">{uploadError}</div>}
+    </div>
+  );
+}
+
+function ContentGridItemsEditor({ layout, items, onChange }) {
+  const update = (i, patch) => onChange(items.map((it, idx) => (idx === i ? { ...it, ...patch } : it)));
+  const remove = (i) => onChange(items.filter((_, idx) => idx !== i));
+  const move = (i, dir) => {
+    const j = i + dir;
+    if (j < 0 || j >= items.length) return;
+    const next = [...items];
+    [next[i], next[j]] = [next[j], next[i]];
     onChange(next);
   };
+  const add = () => onChange([...items, { id: `tmp-${Date.now()}`, heading: "", body: "", media: { status: "pending" } }]);
 
-  const remove = (index) => {
-    onChange(list.filter((_, i) => i !== index));
+  const mediaLabel = layout === "photo-cards" ? "photo" : "icon";
+
+  return (
+    <div>
+      {items.map((item, i) => (
+        <div key={item.id || i} style={{ border: "1px solid var(--border-hairline)", borderRadius: 4, padding: 12, marginBottom: 10 }}>
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <input
+              placeholder="Heading"
+              value={item.heading}
+              onChange={(e) => update(i, { heading: e.target.value })}
+              style={{ flex: 1 }}
+            />
+            <button type="button" className="admin-icon-btn" onClick={() => move(i, -1)} disabled={i === 0}>↑</button>
+            <button type="button" className="admin-icon-btn" onClick={() => move(i, 1)} disabled={i === items.length - 1}>↓</button>
+            <button type="button" className="admin-icon-btn" onClick={() => remove(i)}>✕</button>
+          </div>
+          <textarea
+            placeholder={layout === "feature-rows" ? "Body — supports **bold** and \"- \" bullet lists" : "Short body text (optional)"}
+            value={item.body || ""}
+            onChange={(e) => update(i, { body: e.target.value })}
+            style={{ marginBottom: 8, minHeight: layout === "feature-rows" ? 80 : 44 }}
+          />
+          <ItemMediaUploader media={item.media} onChange={(media) => update(i, { media })} label={mediaLabel} />
+        </div>
+      ))}
+      <button type="button" className="btn-ghost admin-btn-small" onClick={add}>+ Add item</button>
+    </div>
+  );
+}
+
+function SectionEditorBody({ section, onChange }) {
+  const [showPreview, setShowPreview] = useState(false);
+
+  if (section.type === "richtext") {
+    return (
+      <div style={{ padding: "12px 0" }}>
+        <div className="field">
+          <label>Heading (optional)</label>
+          <input value={section.heading || ""} onChange={(e) => onChange({ heading: e.target.value })} />
+        </div>
+        <div className="field">
+          <label>Body</label>
+          <textarea
+            value={section.body || ""}
+            onChange={(e) => onChange({ body: e.target.value })}
+            style={{ minHeight: 120 }}
+            placeholder={'Paragraphs separated by a blank line. "- " for bullets, "  - " for nested. **bold** for emphasis.'}
+          />
+        </div>
+        <button type="button" className="btn-ghost admin-btn-small" onClick={() => setShowPreview(!showPreview)}>
+          {showPreview ? "Hide preview" : "Show preview"}
+        </button>
+        {showPreview && (
+          <div style={{ border: "1px dashed var(--border-hairline-dashed)", borderRadius: 4, padding: 12, marginTop: 8 }}>
+            <RichText text={section.body} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "12px 0" }}>
+      <div className="field">
+        <label>Heading</label>
+        <input value={section.heading || ""} onChange={(e) => onChange({ heading: e.target.value })} />
+      </div>
+      <div className="field">
+        <label>Layout</label>
+        <select value={section.layout || "icon-grid"} onChange={(e) => onChange({ layout: e.target.value })}>
+          <option value="icon-grid">Icon grid — e.g. benefits, key principles, audience</option>
+          <option value="photo-cards">Photo cards — e.g. sub-service showcase</option>
+          <option value="feature-rows">Feature rows — icon + heading + rich text</option>
+        </select>
+      </div>
+      <ContentGridItemsEditor
+        layout={section.layout || "icon-grid"}
+        items={section.items || []}
+        onChange={(items) => onChange({ items })}
+      />
+    </div>
+  );
+}
+
+function SectionsEditor({ sections, onChange }) {
+  const list = sections || [];
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const updateSection = (i, patch) => onChange(list.map((s, idx) => (idx === i ? { ...s, ...patch } : s)));
+  const removeSection = (i) => { onChange(list.filter((_, idx) => idx !== i)); setOpenIndex(null); };
+  const moveSection = (i, dir) => {
+    const j = i + dir;
+    if (j < 0 || j >= list.length) return;
+    const next = [...list];
+    [next[i], next[j]] = [next[j], next[i]];
+    onChange(next);
   };
-
-  const add = () => {
-    onChange([...list, { id: "00", label: "", iconFile: "" }]);
+  const addSection = (type) => {
+    const base = type === "richtext"
+      ? { id: `tmp-${Date.now()}`, type, heading: "", body: "" }
+      : { id: `tmp-${Date.now()}`, type, heading: "", layout: "icon-grid", items: [] };
+    onChange([...list, base]);
+    setOpenIndex(list.length);
   };
 
   return (
     <div>
-      <label>Benefits</label>
-      {list.map((b, i) => (
-        <div className="admin-benefit-row" key={i}>
-          <span className="admin-benefit-id mono">{String(i + 1).padStart(2, "0")}</span>
-          <input
-            placeholder="Label"
-            value={b.label}
-            onChange={(e) => update(i, "label", e.target.value)}
-          />
-          <input
-            placeholder="Icon file"
-            value={b.iconFile || ""}
-            onChange={(e) => update(i, "iconFile", e.target.value)}
-          />
-          <button type="button" className="admin-icon-btn" onClick={() => remove(i)}>✕</button>
+      <label>Page content sections</label>
+      <div className="mono" style={{ fontSize: 11, color: "var(--text-secondary)", margin: "4px 0 10px" }}>
+        These render in order on the public page — intro text, benefits, who-can-benefit, feature
+        blocks, whatever the page needs. Add as many as you like, in any order.
+      </div>
+      {list.map((section, i) => (
+        <div key={section.id || i} style={{ border: "1px solid var(--border-hairline)", borderRadius: 4, marginBottom: 8 }}>
+          <div
+            style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", cursor: "pointer" }}
+            onClick={() => setOpenIndex(openIndex === i ? null : i)}
+          >
+            <span className={`admin-chevron ${openIndex === i ? "open" : ""}`}>▸</span>
+            <span className="mono" style={{ fontSize: 11, color: "var(--brand-blue)" }}>
+              {section.type === "richtext" ? "Rich text" : `Content grid · ${section.layout || "icon-grid"}`}
+            </span>
+            <span style={{ flex: 1, fontSize: 13 }}>{section.heading || "(no heading)"}</span>
+            <span onClick={(e) => e.stopPropagation()} style={{ display: "flex", gap: 4 }}>
+              <button type="button" className="admin-icon-btn" onClick={() => moveSection(i, -1)} disabled={i === 0}>↑</button>
+              <button type="button" className="admin-icon-btn" onClick={() => moveSection(i, 1)} disabled={i === list.length - 1}>↓</button>
+              <button type="button" className="admin-icon-btn" onClick={() => removeSection(i)}>✕</button>
+            </span>
+          </div>
+          {openIndex === i && (
+            <div style={{ padding: "0 12px 12px" }}>
+              <SectionEditorBody section={section} onChange={(patch) => updateSection(i, patch)} />
+            </div>
+          )}
         </div>
       ))}
-      <button type="button" className="btn-ghost admin-btn-small" onClick={add}>
-        + Add benefit
-      </button>
+      <div style={{ display: "flex", gap: 8 }}>
+        <button type="button" className="btn-ghost admin-btn-small" onClick={() => addSection("richtext")}>
+          + Add rich text
+        </button>
+        <button type="button" className="btn-ghost admin-btn-small" onClick={() => addSection("content-grid")}>
+          + Add content grid
+        </button>
+      </div>
     </div>
   );
 }
@@ -187,7 +360,7 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
   const [shortName, setShortName] = useState(initial?.shortName || "");
   const [standardCode, setStandardCode] = useState(initial?.standardCode || "");
   const [note, setNote] = useState(initial?.note || "");
-  const [benefits, setBenefits] = useState(initial?.benefits || []);
+  const [sections, setSections] = useState(initial?.sections || []);
   const [slug, setSlug] = useState(initial?.slug || "");
   const [slugTouched, setSlugTouched] = useState(false);
   const [image, setImage] = useState(initial?.image || null);
@@ -207,7 +380,7 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
         shortName: shortName || undefined,
         standardCode: standardCode || undefined,
         note: note || undefined,
-        benefits,
+        sections,
       };
       if (isEdit) {
         await onSave(payload);
@@ -279,7 +452,7 @@ function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
         <input value={note} onChange={(e) => setNote(e.target.value)} />
       </div>
       <div className="field field-full">
-        <BenefitsEditor benefits={benefits} onChange={setBenefits} />
+        <SectionsEditor sections={sections} onChange={setSections} />
       </div>
       {isEdit ? (
         <ImageField image={image} onUpload={handleUpload} uploading={uploading} uploadError={uploadError} />
@@ -374,7 +547,7 @@ function ServiceGroupRow({ group, onRefetch }) {
                 <tr>
                   <th>Name</th>
                   <th>Standard code</th>
-                  <th>Benefits</th>
+                  <th>Sections</th>
                   <th />
                 </tr>
               </thead>
@@ -383,7 +556,7 @@ function ServiceGroupRow({ group, onRefetch }) {
                   <tr key={child.slug}>
                     <td>{child.name}</td>
                     <td className="mono">{child.standardCode || "—"}</td>
-                    <td>{child.benefits?.length || 0}</td>
+                    <td>{child.sections?.length || 0}</td>
                     <td className="admin-row-actions">
                       <button onClick={() => setModal({ editChild: child })}>Edit</button>
                       <button className="admin-danger-link" onClick={() => deleteChild(child.slug)}>
