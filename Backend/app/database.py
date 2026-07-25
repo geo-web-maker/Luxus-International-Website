@@ -23,6 +23,7 @@ async def init_db() -> None:
     from app.models.job import Job
     from app.models.content import SiteContent
     from app.models.submission import ContactMessage, QuoteRequest, JobApplication
+    from app.models.client import Client
 
     document_models = [
         ServiceGroup,
@@ -31,6 +32,7 @@ async def init_db() -> None:
         ContactMessage,
         QuoteRequest,
         JobApplication,
+        Client,
     ]
 
     await init_beanie(database=database, document_models=document_models)

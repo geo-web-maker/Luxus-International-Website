@@ -44,10 +44,11 @@ async def health_check():
     return {"status": "ok", "environment": settings.environment}
 
 
-from app.routers import services, jobs, content, admin_auth, submissions
+from app.routers import services, jobs, content, admin_auth, submissions, clients
 
 app.include_router(services.router)
 app.include_router(jobs.router)
 app.include_router(content.router)
 app.include_router(admin_auth.router)
 app.include_router(submissions.router)
+app.include_router(clients.router)
