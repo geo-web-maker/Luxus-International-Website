@@ -5,6 +5,7 @@ import "../styles/admin.css";
 const NAV_ITEMS = [
   { to: "/admin", label: "Dashboard", end: true },
   { to: "/admin/services", label: "Services" },
+  { to: "/admin/clients", label: "Clients" },
   { to: "/admin/jobs", label: "Jobs" },
   { to: "/admin/content", label: "Site content" },
   { to: "/admin/submissions", label: "Submissions" },

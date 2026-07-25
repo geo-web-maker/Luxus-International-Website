@@ -2,6 +2,7 @@ import ServiceCard from "../components/ui/ServiceCard";
 import HeroRotator from "../components/HeroRotator/HeroRotator";
 import TypewriterText from "../components/TypewriterText/TypewriterText";
 import HeroParticles from "../components/HeroParticles/HeroParticles";
+import ClientsMarquee from "../components/ClientsMarquee/ClientsMarquee";
 import { Link } from "react-router-dom";
 import { useServices } from "../hooks/useServices";
 import { useContent } from "../hooks/useContent";
@@ -83,6 +84,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <ClientsMarquee />
 
       <div className="info-strip">
         <div className="wrap">

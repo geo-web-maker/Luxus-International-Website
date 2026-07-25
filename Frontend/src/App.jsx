@@ -11,6 +11,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminServices from "./pages/admin/AdminServices";
+import AdminClients from "./pages/admin/AdminClients";
 import AdminJobs from "./pages/admin/AdminJobs";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminSubmissions from "./pages/admin/AdminSubmissions";
@@ -23,6 +24,7 @@ export default function App() {
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="services" element={<AdminServices />} />
+        <Route path="clients" element={<AdminClients />} />
         <Route path="jobs" element={<AdminJobs />} />
         <Route path="content" element={<AdminContent />} />
         <Route path="submissions" element={<AdminSubmissions />} />

@@ -65,6 +65,22 @@ export const servicesApi = {
   },
 };
 
+// ---- Clients (logo cloud) ----------------------------------------------
+
+export const clientsApi = {
+  list: (includeInactive) =>
+    request(`/clients${includeInactive ? "?include_inactive=true" : ""}`),
+  create: (data) => request("/clients", { method: "POST", body: JSON.stringify(data) }),
+  update: (id, data) =>
+    request(`/clients/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+  delete: (id) => request(`/clients/${id}`, { method: "DELETE" }),
+  uploadImage: (id, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return request(`/clients/${id}/image`, { method: "POST", body: formData });
+  },
+};
+
 // ---- Jobs -------------------------------------------------------------
 
 export const jobsApi = {
