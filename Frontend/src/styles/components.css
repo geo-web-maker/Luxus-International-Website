@@ -336,7 +336,9 @@
 .content-grid.feature-rows .grid-item:hover { border-color: var(--brand-blue-solid); }
 .content-grid.feature-rows .grid-item-media { width: 48px; height: 48px; border-radius: 6px; background: rgba(111,197,240,0.08); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
 .content-grid.feature-rows .grid-item-media img { width: 26px; height: 26px; object-fit: contain; }
-.content-grid.feature-rows .grid-item-heading { font-weight: 500; font-size: 14px; margin-bottom: 6px; }
+.content-grid.feature-rows .grid-item-text { display: flex; flex-direction: column; }
+.content-grid.feature-rows .grid-item-text:only-child { grid-column: 1 / -1; }
+.content-grid.feature-rows .grid-item-heading { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin-bottom: 8px; }
 .content-grid.feature-rows .grid-item-body { font-size: 13px; color: var(--text-secondary); }
 .sidebar { position: sticky; top: 24px; align-self: start; }
 .sidebar h3 { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; margin-bottom: 4px; }
