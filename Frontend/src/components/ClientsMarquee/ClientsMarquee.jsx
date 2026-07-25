@@ -19,9 +19,9 @@ export default function ClientsMarquee() {
   const track = [...withImages, ...withImages];
 
   return (
-    <div className={`section ${styles.section}`}>
-      <div className="wrap">
-        <div className="section-head">
+    <div className="section">
+      <div className={styles.headWrap}>
+        <div className={`section-head ${styles.headBar}`}>
           <h2>Trusted by</h2>
           <span className="count mono">{withImages.length} clients &amp; partners</span>
         </div>

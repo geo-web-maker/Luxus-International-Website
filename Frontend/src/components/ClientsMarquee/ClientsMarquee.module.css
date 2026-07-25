@@ -1,5 +1,14 @@
-.section {
-  padding-bottom: 8px;
+.headWrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: clamp(28px, 4vw, 48px) var(--gutter) 0;
+}
+
+/* Combined with the global .section-head class for higher specificity, so
+   this reliably overrides that rule's default 28px margin without relying
+   on stylesheet load order. */
+.headBar {
+  margin-bottom: 16px;
 }
 
 /* Full-bleed strip (not wrapped in .wrap) so the edge fade + marquee can
@@ -8,7 +17,7 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  padding: 4px 0 32px;
+  padding: 0 0 clamp(28px, 4vw, 48px);
 
   /* fade the track out at the left/right edges instead of a hard cut */
   -webkit-mask-image: linear-gradient(
