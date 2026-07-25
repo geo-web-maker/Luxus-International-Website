@@ -6,7 +6,7 @@ Mongo field names (snake_case) without leaking one into the other.
 """
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.common import Benefit, ImageInfo
+from app.models.common import ContentSection, ImageInfo
 
 
 def _to_camel(s: str) -> str:
@@ -31,7 +31,7 @@ class ServiceChildIn(CamelModel):
     short_name: str | None = None
     standard_code: str | None = None
     note: str | None = None
-    benefits: list[Benefit] | None = None
+    sections: list[ContentSection] = Field(default_factory=list)
     image: ImageInfo = Field(default_factory=ImageInfo)
 
 
@@ -43,7 +43,7 @@ class ServiceChildUpdate(CamelModel):
     short_name: str | None = None
     standard_code: str | None = None
     note: str | None = None
-    benefits: list[Benefit] | None = None
+    sections: list[ContentSection] | None = None
     image: ImageInfo | None = None
 
 
@@ -61,6 +61,7 @@ class ServiceGroupIn(CamelModel):
     summary: str = ""
     image: ImageInfo = Field(default_factory=ImageInfo)
     included_services: list[str] | None = None
+    sections: list[ContentSection] = Field(default_factory=list)
 
 
 class ServiceGroupUpdate(CamelModel):
@@ -73,6 +74,7 @@ class ServiceGroupUpdate(CamelModel):
     summary: str | None = None
     image: ImageInfo | None = None
     included_services: list[str] | None = None
+    sections: list[ContentSection] | None = None
 
 
 class ServiceGroupOut(CamelModel):
@@ -84,4 +86,5 @@ class ServiceGroupOut(CamelModel):
     summary: str
     image: ImageInfo
     included_services: list[str] | None = None
+    sections: list[ContentSection] = Field(default_factory=list)
     children: list[ServiceChildOut] = Field(default_factory=list)

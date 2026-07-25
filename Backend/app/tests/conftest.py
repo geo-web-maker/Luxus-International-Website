@@ -32,6 +32,7 @@ from mongomock_motor import AsyncMongoMockClient
 
 from app.core.security import create_access_token, hash_password
 from app.config import settings
+from app.models.client import Client
 from app.models.content import SiteContent
 from app.models.job import Job
 from app.models.service import ServiceGroup
@@ -46,7 +47,7 @@ async def db():
     database = mock_client["test_db"]
     await init_beanie(
         database=database,
-        document_models=[ServiceGroup, Job, SiteContent, ContactMessage, QuoteRequest, JobApplication],
+        document_models=[ServiceGroup, Job, SiteContent, ContactMessage, QuoteRequest, JobApplication, Client],
     )
     yield database
 

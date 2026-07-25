@@ -30,6 +30,7 @@ async def create_group(data: ServiceGroupIn) -> ServiceGroup:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"Slug '{data.slug}' already exists")
 
     group = ServiceGroup(**data.model_dump())
+    _renumber_sections(group.sections)
     await group.insert()
     return group
 
@@ -39,6 +40,7 @@ async def update_group(slug: str, data: ServiceGroupUpdate) -> ServiceGroup:
     set_fields = data.model_dump(exclude_unset=True).keys()
     for field in set_fields:
         setattr(group, field, getattr(data, field))
+    _renumber_sections(group.sections)
     await group.save()
     return group
 
@@ -62,14 +64,15 @@ async def set_group_image(slug: str, file: UploadFile) -> ServiceGroup:
     return group
 
 
-def _renumber_benefits(child: ServiceChild) -> None:
-    """Benefits are displayed in order with a zero-padded id ("01", "02", ...);
-    reassign after any add/remove so ids stay contiguous, matching the
-    behavior store.js's renumbering comment describes for the mock data."""
-    if not child.benefits:
-        return
-    for index, benefit in enumerate(child.benefits, start=1):
-        benefit.id = f"{index:02d}"
+def _renumber_sections(sections: list) -> None:
+    """Sections and their content-grid items are displayed in the order
+    they're stored; reassign zero-padded ids after any add/remove/reorder so
+    they stay contiguous and React keys stay stable — same idea as the old
+    benefit renumbering, generalized to the new sections model."""
+    for s_index, section in enumerate(sections, start=1):
+        section.id = f"s{s_index:02d}"
+        for i_index, item in enumerate(section.items, start=1):
+            item.id = f"i{i_index:02d}"
 
 
 async def create_child(group_slug: str, data: ServiceChildIn) -> ServiceGroup:
@@ -82,7 +85,7 @@ async def create_child(group_slug: str, data: ServiceChildIn) -> ServiceGroup:
         )
 
     child = ServiceChild(**data.model_dump())
-    _renumber_benefits(child)
+    _renumber_sections(child.sections)
     group.children.append(child)
     await group.save()
     return group
@@ -104,12 +107,12 @@ async def update_child(group_slug: str, child_slug: str, data: ServiceChildUpdat
 
     # Use model_dump only to know which fields were explicitly set; pull the
     # actual values from `data` itself (not the dump) so nested models like
-    # `benefits: list[Benefit]` stay as real Benefit instances rather than
-    # being flattened to plain dicts, which _renumber_benefits requires.
+    # `sections: list[ContentSection]` stay as real model instances rather
+    # than being flattened to plain dicts, which _renumber_sections requires.
     set_fields = data.model_dump(exclude_unset=True).keys()
     for field in set_fields:
         setattr(child, field, getattr(data, field))
-    _renumber_benefits(child)
+    _renumber_sections(child.sections)
 
     await group.save()
     return group

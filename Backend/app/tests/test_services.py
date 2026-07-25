@@ -79,29 +79,43 @@ def test_create_duplicate_child_slug_conflicts(client, admin_headers):
     assert r.status_code == 409
 
 
-def test_benefit_renumbering_on_child_update(client, admin_headers):
+def test_section_renumbering_on_child_update(client, admin_headers):
     _create_group(client, admin_headers)
     client.post(
         "/api/services/hse/children",
         json={
             "slug": "envms", "path": "/ser/hse/envms", "name": "Env",
-            "benefits": [
-                {"id": "01", "label": "A"},
-                {"id": "02", "label": "B"},
-                {"id": "03", "label": "C"},
+            "sections": [
+                {
+                    "id": "s01", "type": "content-grid", "heading": "Benefits", "layout": "icon-grid",
+                    "items": [
+                        {"id": "i01", "heading": "A"},
+                        {"id": "i02", "heading": "B"},
+                        {"id": "i03", "heading": "C"},
+                    ],
+                },
             ],
         },
         headers=admin_headers,
     )
-    # remove the middle benefit -> remaining should renumber to 01, 02
+    # remove the middle item -> remaining items (and the section itself)
+    # should renumber to their contiguous ids
     r = client.patch(
         "/api/services/hse/children/envms",
-        json={"benefits": [{"id": "99", "label": "A"}, {"id": "99", "label": "C"}]},
+        json={
+            "sections": [
+                {
+                    "id": "x", "type": "content-grid", "heading": "Benefits", "layout": "icon-grid",
+                    "items": [{"id": "x", "heading": "A"}, {"id": "x", "heading": "C"}],
+                },
+            ],
+        },
         headers=admin_headers,
     )
     assert r.status_code == 200
     child = next(c for c in r.json()["children"] if c["slug"] == "envms")
-    assert [b["id"] for b in child["benefits"]] == ["01", "02"]
+    assert child["sections"][0]["id"] == "s01"
+    assert [i["id"] for i in child["sections"][0]["items"]] == ["i01", "i02"]
 
 
 def test_delete_child(client, admin_headers):
