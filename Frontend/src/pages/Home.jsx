@@ -71,6 +71,8 @@ export default function Home() {
         </div>
       </div>
 
+      <ClientsMarquee />
+
       <div className="section">
         <div className="wrap">
           <div className="section-head">
@@ -84,8 +86,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <ClientsMarquee />
 
       <div className="info-strip">
         <div className="wrap">
