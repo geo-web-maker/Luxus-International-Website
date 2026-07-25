@@ -5,15 +5,7 @@ import HeroParticles from "../components/HeroParticles/HeroParticles";
 import { Link } from "react-router-dom";
 import { useServices } from "../hooks/useServices";
 import { useContent } from "../hooks/useContent";
-
-// Typed/rotated in the hero tagline — real content only: the client's own
-// tagline, the previously-approved headline copy, and real service lines
-// from the quote-form options (not invented marketing copy).
-const heroTypewriterPhrases = [
-  company.tagline,
-  "Built for the standards that build trust.",
-  ...quoteFormOptions.typeOfService.slice(0, 4),
-];
+import { quoteFormOptions } from "../data/siteContent";
 
 export default function Home() {
   const { data: services, loading: servicesLoading } = useServices();
@@ -25,6 +17,15 @@ export default function Home() {
 
   const { company, isoCoverageTags } = content;
   const teaserServices = services.slice(0, 3);
+
+  // Typed/rotated in the hero tagline — real content only: the client's own
+  // tagline, the previously-approved headline copy, and real service lines
+  // from the quote-form options (not invented marketing copy).
+  const heroTypewriterPhrases = [
+    company.tagline,
+    "Built for the standards that build trust.",
+    ...quoteFormOptions.typeOfService.slice(0, 4),
+  ];
 
   return (
     <>
