@@ -3,7 +3,7 @@ Services router. Public GETs, admin-gated everything else — mirrors
 servicesApi in store.js exactly (list/getGroup/createGroup/updateGroup/
 deleteGroup/createChild/updateChild/deleteChild).
 """
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, File, UploadFile, status
 
 from app.deps import require_admin
 from app.models.service import ServiceGroup
@@ -52,6 +52,14 @@ async def delete_service(slug: str, _admin: str = Depends(require_admin)):
     await service_service.delete_group(slug)
 
 
+@router.post("/{slug}/image", response_model=ServiceGroupOut)
+async def upload_service_image(
+    slug: str, file: UploadFile = File(...), _admin: str = Depends(require_admin)
+):
+    group = await service_service.set_group_image(slug, file)
+    return _to_out(group)
+
+
 @router.post("/{slug}/children", response_model=ServiceGroupOut, status_code=status.HTTP_201_CREATED)
 async def create_child(slug: str, data: ServiceChildIn, _admin: str = Depends(require_admin)):
     group = await service_service.create_child(slug, data)
@@ -69,4 +77,12 @@ async def update_child(
 @router.delete("/{slug}/children/{child_slug}", response_model=ServiceGroupOut)
 async def delete_child(slug: str, child_slug: str, _admin: str = Depends(require_admin)):
     group = await service_service.delete_child(slug, child_slug)
+    return _to_out(group)
+
+
+@router.post("/{slug}/children/{child_slug}/image", response_model=ServiceGroupOut)
+async def upload_child_image(
+    slug: str, child_slug: str, file: UploadFile = File(...), _admin: str = Depends(require_admin)
+):
+    group = await service_service.set_child_image(slug, child_slug, file)
     return _to_out(group)

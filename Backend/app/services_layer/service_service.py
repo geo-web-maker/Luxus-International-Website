@@ -4,8 +4,11 @@ stays pure HTTP-concerns (status codes, request/response mapping) and this
 stays pure domain logic (uniqueness rules, renumbering) that's independently
 testable without spinning up FastAPI.
 """
-from fastapi import HTTPException, status
+from fastapi import HTTPException, UploadFile, status
 
+from app.core import storage
+from app.core.uploads import read_and_validate_image
+from app.models.common import ImageInfo
 from app.models.service import ServiceGroup, ServiceChild
 from app.schemas.service import ServiceGroupIn, ServiceGroupUpdate, ServiceChildIn, ServiceChildUpdate
 
@@ -43,6 +46,20 @@ async def update_group(slug: str, data: ServiceGroupUpdate) -> ServiceGroup:
 async def delete_group(slug: str) -> None:
     group = await get_group_or_404(slug)
     await group.delete()
+
+
+async def set_group_image(slug: str, file: UploadFile) -> ServiceGroup:
+    group = await get_group_or_404(slug)
+    content = await read_and_validate_image(file)
+    url = await storage.upload_file(
+        content=content,
+        original_filename=file.filename or "image",
+        content_type=file.content_type,
+        prefix="service-images",
+    )
+    group.image = ImageInfo(status="confirmed", file=url)
+    await group.save()
+    return group
 
 
 def _renumber_benefits(child: ServiceChild) -> None:
@@ -102,5 +119,20 @@ async def delete_child(group_slug: str, child_slug: str) -> ServiceGroup:
     group = await get_group_or_404(group_slug)
     _find_child_or_404(group, child_slug)  # raises 404 if missing
     group.children = [c for c in group.children if c.slug != child_slug]
+    await group.save()
+    return group
+
+
+async def set_child_image(group_slug: str, child_slug: str, file: UploadFile) -> ServiceGroup:
+    group = await get_group_or_404(group_slug)
+    child = _find_child_or_404(group, child_slug)
+    content = await read_and_validate_image(file)
+    url = await storage.upload_file(
+        content=content,
+        original_filename=file.filename or "image",
+        content_type=file.content_type,
+        prefix="service-images",
+    )
+    child.image = ImageInfo(status="confirmed", file=url)
     await group.save()
     return group

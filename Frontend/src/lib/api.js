@@ -50,6 +50,19 @@ export const servicesApi = {
     }),
   deleteChild: (groupSlug, childSlug) =>
     request(`/services/${groupSlug}/children/${childSlug}`, { method: "DELETE" }),
+  uploadGroupImage: (slug, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return request(`/services/${slug}/image`, { method: "POST", body: formData });
+  },
+  uploadChildImage: (groupSlug, childSlug, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return request(`/services/${groupSlug}/children/${childSlug}/image`, {
+      method: "POST",
+      body: formData,
+    });
+  },
 };
 
 // ---- Jobs -------------------------------------------------------------

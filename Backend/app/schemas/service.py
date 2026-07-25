@@ -31,6 +31,7 @@ class ServiceChildIn(CamelModel):
     standard_code: str | None = None
     note: str | None = None
     benefits: list[Benefit] | None = None
+    image: ImageInfo = Field(default_factory=ImageInfo)
 
 
 class ServiceChildUpdate(CamelModel):
@@ -41,6 +42,7 @@ class ServiceChildUpdate(CamelModel):
     standard_code: str | None = None
     note: str | None = None
     benefits: list[Benefit] | None = None
+    image: ImageInfo | None = None
 
 
 class ServiceChildOut(ServiceChildIn):

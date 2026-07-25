@@ -14,6 +14,13 @@ ALLOWED_CV_CONTENT_TYPES = {
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 }
 
+ALLOWED_IMAGE_CONTENT_TYPES = {
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+}
+
 
 async def read_and_validate_cv(file: UploadFile) -> bytes:
     if file.content_type not in ALLOWED_CV_CONTENT_TYPES:
@@ -28,6 +35,24 @@ async def read_and_validate_cv(file: UploadFile) -> bytes:
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
             detail=f"CV must be under {settings.max_upload_mb}MB",
+        )
+
+    return content
+
+
+async def read_and_validate_image(file: UploadFile) -> bytes:
+    if file.content_type not in ALLOWED_IMAGE_CONTENT_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail="Image must be JPEG, PNG, WebP, or GIF",
+        )
+
+    content = await file.read()
+    max_bytes = settings.max_upload_mb * 1024 * 1024
+    if len(content) > max_bytes:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=f"Image must be under {settings.max_upload_mb}MB",
         )
 
     return content

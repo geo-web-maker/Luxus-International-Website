@@ -62,7 +62,7 @@ export default function ServiceDetail() {
                   key={child.slug}
                   path={child.path}
                   name={child.standardCode ? `${child.standardCode} — ${child.name}` : child.name}
-                  image={{ status: "pending" }}
+                  image={child.image}
                 />
               ))}
             </div>
@@ -87,12 +87,16 @@ export default function ServiceDetail() {
       <div className = "wrap">
         <div className="detail-grid">
           <div className="detail-main">
-            <div className="detail-placeholder">
-              <span>
-                ◻ pull real copy + confirmed image for "{result.slug}" from
-                pages_full_content.json / icon_inventory.csv
-              </span>
-            </div>
+            {result.image?.status === "confirmed" && result.image?.file ? (
+              <img src={result.image.file} alt={result.name} className="detail-image" />
+            ) : (
+              <div className="detail-placeholder">
+                <span>
+                  ◻ pull real copy + confirmed image for "{result.slug}" from
+                  pages_full_content.json / icon_inventory.csv
+                </span>
+              </div>
+            )}
             <p>
               This is placeholder description text for {result.name}. Replace with the
               real body content extracted from the WordPress export for this page.

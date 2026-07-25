@@ -19,12 +19,43 @@ function Modal({ title, wide, onClose, children }) {
   );
 }
 
-function GroupForm({ initial, onSave, onCancel }) {
+function ImageField({ image, onUpload, uploading, uploadError }) {
+  const hasImage = image?.status === "confirmed" && image?.file;
+
+  return (
+    <div className="field field-full">
+      <label>Photo</label>
+      {hasImage ? (
+        <div className="admin-image-preview">
+          <img src={image.file} alt="" style={{ maxWidth: 200, maxHeight: 140, display: "block", marginBottom: 8 }} />
+        </div>
+      ) : (
+        <div className="filetag mono" style={{ marginBottom: 8 }}>◻ no image uploaded yet</div>
+      )}
+      <input
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) onUpload(file);
+        }}
+        disabled={uploading}
+      />
+      {uploading && <div className="mono" style={{ fontSize: 12, marginTop: 4 }}>Uploading…</div>}
+      {uploadError && <div className="error">{uploadError}</div>}
+    </div>
+  );
+}
+
+function GroupForm({ initial, onSave, onUploadImage, onCancel }) {
   const [name, setName] = useState(initial?.name || "");
   const [shortName, setShortName] = useState(initial?.shortName || "");
   const [summary, setSummary] = useState(initial?.summary || "");
+  const [image, setImage] = useState(initial?.image || null);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   const isEdit = Boolean(initial);
 
   const submit = async (e) => {
@@ -44,6 +75,19 @@ function GroupForm({ initial, onSave, onCancel }) {
     }
   };
 
+  const handleUpload = async (file) => {
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const updatedGroup = await onUploadImage(file);
+      setImage(updatedGroup.image);
+    } catch (err) {
+      setUploadError(err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <form onSubmit={submit}>
       <div className="field">
@@ -58,6 +102,16 @@ function GroupForm({ initial, onSave, onCancel }) {
         <label>Summary</label>
         <textarea value={summary} onChange={(e) => setSummary(e.target.value)} />
       </div>
+      {isEdit ? (
+        <ImageField image={image} onUpload={handleUpload} uploading={uploading} uploadError={uploadError} />
+      ) : (
+        <div className="field field-full">
+          <label>Photo</label>
+          <div className="mono" style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+            Save the group first, then edit it to upload a photo.
+          </div>
+        </div>
+      )}
       {error && <div className="error">{error}</div>}
       <div className="admin-modal-actions">
         <button type="button" className="btn-ghost" onClick={onCancel}>Cancel</button>
@@ -111,13 +165,16 @@ function BenefitsEditor({ benefits, onChange }) {
   );
 }
 
-function ChildForm({ groupPath, initial, onSave, onCancel }) {
+function ChildForm({ groupPath, initial, onSave, onUploadImage, onCancel }) {
   const [name, setName] = useState(initial?.name || "");
   const [standardCode, setStandardCode] = useState(initial?.standardCode || "");
   const [note, setNote] = useState(initial?.note || "");
   const [benefits, setBenefits] = useState(initial?.benefits || []);
+  const [image, setImage] = useState(initial?.image || null);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   const isEdit = Boolean(initial);
 
   const submit = async (e) => {
@@ -136,6 +193,20 @@ function ChildForm({ groupPath, initial, onSave, onCancel }) {
       setError(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleUpload = async (file) => {
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const updatedGroup = await onUploadImage(file);
+      const updatedChild = updatedGroup.children.find((c) => c.slug === initial.slug);
+      setImage(updatedChild?.image || null);
+    } catch (err) {
+      setUploadError(err.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -162,6 +233,16 @@ function ChildForm({ groupPath, initial, onSave, onCancel }) {
       <div className="field field-full">
         <BenefitsEditor benefits={benefits} onChange={setBenefits} />
       </div>
+      {isEdit ? (
+        <ImageField image={image} onUpload={handleUpload} uploading={uploading} uploadError={uploadError} />
+      ) : (
+        <div className="field field-full">
+          <label>Photo</label>
+          <div className="mono" style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+            Save the sub-service first, then edit it to upload a photo.
+          </div>
+        </div>
+      )}
       {error && <div className="error">{error}</div>}
       <div className="admin-modal-actions">
         <button type="button" className="btn-ghost" onClick={onCancel}>Cancel</button>
@@ -184,6 +265,18 @@ function ServiceGroupRow({ group, onRefetch }) {
     await servicesApi.updateGroup(group.slug, data);
     await onRefetch();
     closeModal();
+  };
+
+  const uploadGroupImage = async (file) => {
+    const updatedGroup = await servicesApi.uploadGroupImage(group.slug, file);
+    await onRefetch();
+    return updatedGroup;
+  };
+
+  const uploadChildImage = async (childSlug, file) => {
+    const updatedGroup = await servicesApi.uploadChildImage(group.slug, childSlug, file);
+    await onRefetch();
+    return updatedGroup;
   };
 
   const deleteGroup = async () => {
@@ -271,7 +364,7 @@ function ServiceGroupRow({ group, onRefetch }) {
 
       {modal === "edit-group" && (
         <Modal title={`Edit ${group.name}`} onClose={closeModal}>
-          <GroupForm initial={group} onSave={saveGroup} onCancel={closeModal} />
+          <GroupForm initial={group} onSave={saveGroup} onUploadImage={uploadGroupImage} onCancel={closeModal} />
         </Modal>
       )}
 
@@ -287,6 +380,7 @@ function ServiceGroupRow({ group, onRefetch }) {
             groupPath={group.path}
             initial={modal.editChild}
             onSave={saveChild}
+            onUploadImage={(file) => uploadChildImage(modal.editChild.slug, file)}
             onCancel={closeModal}
           />
         </Modal>

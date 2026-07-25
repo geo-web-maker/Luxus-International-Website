@@ -22,6 +22,7 @@ class ServiceChild(BaseModel):
     standard_code: str | None = None
     note: str | None = None
     benefits: list[Benefit] | None = None
+    image: ImageInfo = Field(default_factory=ImageInfo)
 
 
 class ServiceGroup(Document):

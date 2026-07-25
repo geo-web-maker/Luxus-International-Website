@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 
 export default function ServiceCard({ path, name, image }) {
-  const pending = !image || image.status === "pending";
+  const hasImage = image?.status === "confirmed" && image?.file;
   return (
     <Link to={path} className="card">
-      {pending && (
+      {hasImage ? (
+        <img src={image.file} alt={name} className="card-image" />
+      ) : (
         <span className="filetag mono">
           ◻ image pending{image?.note ? ` — ${image.note}` : ""}
         </span>

@@ -264,6 +264,7 @@
 .card .id { position: relative; z-index: 2; font-size: 11px; color: var(--brand-blue); margin-bottom: 6px; }
 .card .name { position: relative; z-index: 2; font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.01em; }
 .card .filetag { position: absolute; z-index: 2; top: 14px; left: 18px; right: 18px; font-size: 9px; color: var(--text-faint); border: 1px dashed var(--border-hairline-dashed); padding: 4px 7px; border-radius: 2px; }
+.card-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
 
 .info-strip { border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); }
 .info-strip > .wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
@@ -301,6 +302,7 @@
 @media (max-width: 960px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
 .detail-placeholder { width: 100%; height: 280px; border-radius: 4px; margin-bottom: 24px; background: repeating-linear-gradient(135deg, #16213A 0, #16213A 2px, transparent 2px, transparent 14px); border: 1px dashed var(--border-hairline-dashed); display: flex; align-items: center; justify-content: center; }
 .detail-placeholder span { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-align: center; padding: 0 20px; }
+.detail-image { width: 100%; height: 280px; object-fit: cover; border-radius: 4px; margin-bottom: 24px; border: 1px solid var(--border-hairline); }
 .detail-main p { font-size: 14px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 14px; }
 .detail-main h3 { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin: 24px 0 12px; }
 .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
