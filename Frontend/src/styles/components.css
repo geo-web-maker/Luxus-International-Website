@@ -309,7 +309,7 @@
    (heading + items of {media?, heading, body?}), three visual treatments
    picked by `layout`, so any service page assembles from the same blocks. */
 .content-section { margin-bottom: 36px; }
-.content-grid-head { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin: 24px 0 16px; }
+.content-grid-head { font-family: var(--font-display); font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--brand-blue); margin: 32px 0 20px; }
 
 .richtext ul { margin: 0 0 14px 20px; }
 .richtext li { list-style: disc; margin-bottom: 6px; line-height: 1.7; color: var(--text-secondary); font-size: 14px; }
