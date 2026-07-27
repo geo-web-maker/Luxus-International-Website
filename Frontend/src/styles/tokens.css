@@ -47,6 +47,30 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 input, textarea, select { font-family: inherit; }
 ul { list-style: none; }
 
+/* Justify body copy site-wide for a uniform, print-like column edge.
+   Scoped to prose containers on the public site (about copy, richtext
+   service sections, detail pages, card/cta blurbs) rather than every <p> —
+   admin-panel sub-headers, empty-state notes, and the hero tagline are
+   short, often single-line strings where justify has no visible effect on
+   wrapped lines and can look odd on the rare two-line case, so they're left
+   out. hyphens+wrap avoid the large ragged gaps justify can otherwise
+   produce in narrower columns (sidebar, table cells, cards). */
+.about-copy p,
+.mv-grid p,
+.about-panel p,
+.value-card p,
+.richtext p,
+.richtext li,
+.detail-main p,
+.grid-item-body,
+.sidebar-cta p,
+.content-grid-head + p {
+  text-align: justify;
+  text-align-last: left;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
 .mono { font-family: var(--font-mono); }
 
 .container { max-width: 1400px; margin: 0 auto; padding: 0 48px; }

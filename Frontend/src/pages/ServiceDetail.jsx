@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import ServiceCard from "../components/ui/ServiceCard";
 import SectionRenderer from "../components/ServiceSections/SectionRenderer";
@@ -111,13 +111,16 @@ export default function ServiceDetail() {
             <div className="sidebar">
               <h3>More in {parent.name}</h3>
               <span className="sub mono">{parent.path}</span>
-              {siblings.map((sib) => (
-                <Link to={sib.path} className="sidebar-item" key={sib.slug}>
-                  <span>
-                    <span className="id mono">{sib.path}</span> {sib.name}
-                  </span>
-                </Link>
-              ))}
+              <div className="sidebar-cards">
+                {siblings.map((sib) => (
+                  <ServiceCard
+                    key={sib.slug}
+                    path={sib.path}
+                    name={sib.standardCode ? `${sib.standardCode} — ${sib.name}` : sib.name}
+                    image={sib.image}
+                  />
+                ))}
+              </div>
               <div className="sidebar-cta">
                 <div className="t">Request a quote</div>
                 <p>Get pricing for {result.name} tailored to your organization.</p>

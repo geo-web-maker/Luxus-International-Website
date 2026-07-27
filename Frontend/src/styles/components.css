@@ -255,7 +255,8 @@
 
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-@media (max-width: 860px) { .grid3, .grid2 { grid-template-columns: 1fr; gap: 16px; } }
+@media (max-width: 860px) { .grid3, .grid2 { grid-template-columns: 1fr 1fr; gap: 16px; } }
+@media (max-width: 560px) { .grid3, .grid2 { grid-template-columns: 1fr; gap: 14px; } }
 
 .card { position: relative; height: 220px; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 22px; background: var(--surface-raised); border: 1px solid var(--border-hairline); transition: border-color 0.2s ease, transform 0.2s ease; }
 .card:hover { border-color: var(--brand-blue); transform: translateY(-2px); }
@@ -264,7 +265,11 @@
 .card .id { position: relative; z-index: 2; font-size: 11px; color: var(--brand-blue); margin-bottom: 6px; }
 .card .name { position: relative; z-index: 2; font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.01em; }
 .card .filetag { position: absolute; z-index: 2; top: 14px; left: 18px; right: 18px; font-size: 9px; color: var(--text-faint); border: 1px dashed var(--border-hairline-dashed); padding: 4px 7px; border-radius: 2px; }
-.card-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+/* contain (not cover) so the full picture is always visible, never cropped;
+   the card keeps its own background behind the letterboxed image so there's
+   no visual gap where the image doesn't fill the frame. */
+.card-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; background: var(--bg-navy-alt); z-index: 0; }
+@media (max-width: 560px) { .card { height: 180px; padding: 16px; } }
 
 .info-strip { border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); }
 .info-strip > .wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
@@ -286,8 +291,8 @@
 .mv-grid ul { padding-left: 18px; margin-top: 8px; }
 @media (max-width: 860px) { .mv-grid { grid-template-columns: 1fr; gap: 24px; } }
 
-.about-links { display: flex; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); margin: 8px 0; }
-.about-links button { flex: 1; padding: 20px 28px; border-right: 1px solid var(--border-hairline); text-align: left; transition: background 0.2s ease; }
+.about-links { display: flex; flex-wrap: wrap; border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); margin: 8px 0; }
+.about-links button { flex: 1; min-width: 140px; padding: 20px 28px; border-right: 1px solid var(--border-hairline); text-align: left; transition: background 0.2s ease; }
 .about-links button:last-child { border-right: none; }
 .about-links button.on { background: var(--surface-raised); }
 .about-links button.on .t { color: var(--brand-blue); }
@@ -296,28 +301,38 @@
 .about-panel { padding: 36px 0 52px; border-bottom: 1px solid var(--border-hairline); }
 .about-panel p, .about-panel li { font-size: 15px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 12px; }
 .about-panel ul { padding-left: 18px; }
+@media (max-width: 600px) {
+  .about-links button { min-width: 100%; border-right: none; border-bottom: 1px solid var(--border-hairline); }
+  .about-links button:last-child { border-bottom: none; }
+}
 
 .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
 .value-card { border: 1px solid var(--border-hairline); border-radius: 12px; padding: 22px 24px; }
 .value-card h4 { font-family: var(--font-display); font-weight: 800; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 10px; }
 .value-card p { margin-bottom: 0; }
 @media (max-width: 860px) { .values-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .value-card { padding: 18px; } }
 
 .why-grid { list-style: none; padding: 0; margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
 .why-grid li { border-left: 3px solid var(--brand-blue); padding: 6px 0 6px 16px; }
 .why-grid h4 { font-family: var(--font-display); font-weight: 700; font-size: 14px; margin: 0; color: var(--text-primary); }
-@media (max-width: 860px) { .why-grid { grid-template-columns: 1fr; } }
+@media (max-width: 860px) { .why-grid { grid-template-columns: 1fr; gap: 12px; } }
 
 /* Service detail */
 .detail-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 48px; padding: 52px 0; }
-@media (max-width: 960px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
-.detail-placeholder { width: 100%; height: 280px; border-radius: 4px; margin-bottom: 24px; background: repeating-linear-gradient(135deg, #16213A 0, #16213A 2px, transparent 2px, transparent 14px); border: 1px dashed var(--border-hairline-dashed); display: flex; align-items: center; justify-content: center; }
+@media (max-width: 960px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; padding: 32px 0; } }
+.detail-placeholder { width: 100%; min-height: 200px; border-radius: 4px; margin-bottom: 24px; background: repeating-linear-gradient(135deg, #16213A 0, #16213A 2px, transparent 2px, transparent 14px); border: 1px dashed var(--border-hairline-dashed); display: flex; align-items: center; justify-content: center; }
 .detail-placeholder span { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-align: center; padding: 0 20px; }
-.detail-image { width: 100%; height: 280px; object-fit: cover; border-radius: 4px; margin-bottom: 24px; border: 1px solid var(--border-hairline); }
+@media (max-width: 600px) { .detail-placeholder { min-height: 120px; padding: 12px; } .detail-placeholder span { font-size: 10px; } }
+/* contain + auto height (capped) so the frame adapts to the picture's own
+   aspect ratio instead of forcing every image into a fixed 280px crop */
+.detail-image { display: block; width: 100%; height: auto; max-height: 480px; object-fit: contain; background: var(--bg-navy-alt); border-radius: 4px; margin-bottom: 24px; border: 1px solid var(--border-hairline); }
 .detail-main p { font-size: 14px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 14px; }
 .detail-main h3 { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin: 24px 0 12px; }
+@media (max-width: 600px) { .detail-image { max-height: 260px; } }
 /* Service page content sections — see ServiceSections/. One data shape
    (heading + items of {media?, heading, body?}), three visual treatments
+
    picked by `layout`, so any service page assembles from the same blocks. */
 .content-section { margin-bottom: 36px; }
 .content-grid-head { font-family: var(--font-display); font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--brand-blue); margin: 32px 0 20px; }
@@ -332,6 +347,7 @@
 .content-grid.icon-grid .grid-item-media img { width: 32px; height: 32px; object-fit: contain; }
 .content-grid.icon-grid .grid-item-heading { font-size: 13px; color: var(--text-secondary); }
 @media (max-width: 700px) { .content-grid.icon-grid .grid-items { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .content-grid.icon-grid .grid-items { grid-template-columns: 1fr; } }
 
 .content-grid.photo-cards .grid-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .content-grid.photo-cards .grid-item { border: 1px solid var(--border-hairline); background: var(--surface-raised); border-radius: 8px; overflow: hidden; transition: transform 0.15s, border-color 0.15s; }
@@ -377,10 +393,22 @@
 .sidebar .sub { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
 .sidebar-item { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border-hairline); font-size: 12px; }
 .sidebar-item .id { color: var(--brand-blue); margin-right: 8px; }
+/* Sibling "more in this category" cards — same visual treatment as the
+   category selection grid (.card/.card-image), just single-column since
+   the sidebar column is narrower than the main content area. */
+.sidebar-cards { display: flex; flex-direction: column; gap: 14px; }
+.sidebar-cards .card { height: 140px; padding: 16px; }
 .sidebar-cta { border: 1px solid var(--brand-green); padding: 18px; margin-top: 20px; }
 .sidebar-cta .t { font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 6px; }
 .sidebar-cta p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; }
 .sidebar-cta .btn-primary { width: 100%; text-align: center; padding: 12px; }
+@media (max-width: 960px) {
+  /* Below the breakpoint where .detail-grid stacks to one column, the
+     sidebar is no longer a real second column, so sticky positioning has
+     nothing meaningful to stick within and can otherwise pin oddly over
+     content while scrolling. */
+  .sidebar { position: static; top: auto; }
+}
 
 /* Contact & Quotation pages */
 .quote-form-container {
