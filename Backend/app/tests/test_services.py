@@ -136,3 +136,83 @@ def test_public_reads_do_not_require_auth(client, admin_headers):
     assert r.status_code == 200
     r = client.get("/api/services/hse")
     assert r.status_code == 200
+
+
+def test_spec_table_section_round_trips(client, admin_headers):
+    _create_group(client, admin_headers)
+    r = client.post(
+        "/api/services/hse/children",
+        json={
+            "slug": "isocli", "path": "/ser/hse/isocli", "name": "ISO Lead Implementer",
+            "sections": [
+                {
+                    "id": "x",
+                    "type": "spec-table",
+                    "heading": "",
+                    "rows": [
+                        {"label": "Duration", "value": "5 Days"},
+                        {"label": "Language", "value": "English"},
+                    ],
+                },
+            ],
+        },
+        headers=admin_headers,
+    )
+    assert r.status_code == 201
+    child = next(c for c in r.json()["children"] if c["slug"] == "isocli")
+    section = child["sections"][0]
+    assert section["type"] == "spec-table"
+    assert section["rows"] == [
+        {"label": "Duration", "value": "5 Days"},
+        {"label": "Language", "value": "English"},
+    ]
+
+
+def test_data_table_section_round_trips(client, admin_headers):
+    _create_group(client, admin_headers)
+    r = client.post(
+        "/api/services/hse/children",
+        json={
+            "slug": "isot", "path": "/ser/hse/isot", "name": "ISO Training",
+            "sections": [
+                {
+                    "id": "x",
+                    "type": "data-table",
+                    "heading": "Benefits of ISO Training",
+                    "columns": ["Employees", "Individuals"],
+                    "rows": [
+                        ["- Improved performance", "- Enhanced career opportunities"],
+                    ],
+                },
+            ],
+        },
+        headers=admin_headers,
+    )
+    assert r.status_code == 201
+    child = next(c for c in r.json()["children"] if c["slug"] == "isot")
+    section = child["sections"][0]
+    assert section["type"] == "data-table"
+    assert section["columns"] == ["Employees", "Individuals"]
+    assert section["rows"] == [["- Improved performance", "- Enhanced career opportunities"]]
+
+
+def test_section_renumbering_leaves_spec_table_rows_untouched(client, admin_headers):
+    _create_group(client, admin_headers)
+    r = client.post(
+        "/api/services/hse/children",
+        json={
+            "slug": "isocli", "path": "/ser/hse/isocli", "name": "ISO Lead Implementer",
+            "sections": [
+                {"id": "x", "type": "richtext", "body": "Intro"},
+                {
+                    "id": "x", "type": "spec-table",
+                    "rows": [{"label": "Duration", "value": "5 Days"}],
+                },
+            ],
+        },
+        headers=admin_headers,
+    )
+    assert r.status_code == 201
+    child = next(c for c in r.json()["children"] if c["slug"] == "isocli")
+    assert [s["id"] for s in child["sections"]] == ["s01", "s02"]
+    assert child["sections"][1]["rows"] == [{"label": "Duration", "value": "5 Days"}]
