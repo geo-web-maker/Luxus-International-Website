@@ -297,6 +297,17 @@
 .about-panel p, .about-panel li { font-size: 15px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 12px; }
 .about-panel ul { padding-left: 18px; }
 
+.values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+.value-card { border: 1px solid var(--border-hairline); border-radius: 12px; padding: 22px 24px; }
+.value-card h4 { font-family: var(--font-display); font-weight: 800; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin-bottom: 10px; }
+.value-card p { margin-bottom: 0; }
+@media (max-width: 860px) { .values-grid { grid-template-columns: 1fr; } }
+
+.why-grid { list-style: none; padding: 0; margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+.why-grid li { border-left: 3px solid var(--brand-blue); padding: 6px 0 6px 16px; }
+.why-grid h4 { font-family: var(--font-display); font-weight: 700; font-size: 14px; margin: 0; color: var(--text-primary); }
+@media (max-width: 860px) { .why-grid { grid-template-columns: 1fr; } }
+
 /* Service detail */
 .detail-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 48px; padding: 52px 0; }
 @media (max-width: 960px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; } }
