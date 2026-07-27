@@ -67,6 +67,7 @@ export default function ServiceDetail() {
                 />
               ))}
             </div>
+            <SectionRenderer sections={result.sections} />
           </div>
         </div>
       </>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useServices } from "../../hooks/useServices";
 import { servicesApi, slugify, uploadsApi } from "../../lib/api";
 import RichText from "../../components/ServiceSections/RichText";
+import SpecTable from "../../components/ServiceSections/SpecTable";
 
 function Modal({ title, wide, onClose, children }) {
   return (
@@ -237,6 +238,131 @@ function ContentGridItemsEditor({ layout, items, onChange }) {
   );
 }
 
+function SpecRowsEditor({ rows, onChange }) {
+  const list = rows || [];
+  const update = (i, patch) => onChange(list.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
+  const remove = (i) => onChange(list.filter((_, idx) => idx !== i));
+  const move = (i, dir) => {
+    const j = i + dir;
+    if (j < 0 || j >= list.length) return;
+    const next = [...list];
+    [next[i], next[j]] = [next[j], next[i]];
+    onChange(next);
+  };
+  const add = () => onChange([...list, { label: "", value: "" }]);
+
+  return (
+    <div>
+      {list.map((row, i) => (
+        <div key={i} style={{ display: "flex", gap: 8, marginBottom: 6, alignItems: "center" }}>
+          <input
+            placeholder="Label — e.g. Duration"
+            value={row.label}
+            onChange={(e) => update(i, { label: e.target.value })}
+            style={{ flex: 1 }}
+          />
+          <input
+            placeholder="Value — e.g. 5 Days"
+            value={row.value}
+            onChange={(e) => update(i, { value: e.target.value })}
+            style={{ flex: 2 }}
+          />
+          <button type="button" className="admin-icon-btn" onClick={() => move(i, -1)} disabled={i === 0}>↑</button>
+          <button type="button" className="admin-icon-btn" onClick={() => move(i, 1)} disabled={i === list.length - 1}>↓</button>
+          <button type="button" className="admin-icon-btn" onClick={() => remove(i)}>✕</button>
+        </div>
+      ))}
+      <button type="button" className="btn-ghost admin-btn-small" onClick={add}>+ Add row</button>
+    </div>
+  );
+}
+
+function DataTableEditor({ columns, rows, onChange }) {
+  const cols = columns || [];
+  const rowList = rows || [];
+
+  const updateColumn = (i, value) => {
+    const next = [...cols];
+    next[i] = value;
+    onChange({ columns: next, rows: rowList });
+  };
+  const addColumn = () => {
+    onChange({ columns: [...cols, ""], rows: rowList.map((r) => [...r, ""]) });
+  };
+  const removeColumn = (i) => {
+    onChange({
+      columns: cols.filter((_, idx) => idx !== i),
+      rows: rowList.map((r) => r.filter((_, idx) => idx !== i)),
+    });
+  };
+
+  const updateCell = (r, c, value) => {
+    const next = rowList.map((row) => [...row]);
+    next[r][c] = value;
+    onChange({ columns: cols, rows: next });
+  };
+  const addRow = () => {
+    onChange({ columns: cols, rows: [...rowList, cols.map(() => "")] });
+  };
+  const removeRow = (i) => {
+    onChange({ columns: cols, rows: rowList.filter((_, idx) => idx !== i) });
+  };
+  const moveRow = (i, dir) => {
+    const j = i + dir;
+    if (j < 0 || j >= rowList.length) return;
+    const next = [...rowList];
+    [next[i], next[j]] = [next[j], next[i]];
+    onChange({ columns: cols, rows: next });
+  };
+
+  return (
+    <div>
+      <div className="mono" style={{ fontSize: 11, color: "var(--text-secondary)", marginBottom: 8 }}>
+        Columns are optional (leave empty for a headerless table, e.g. side-by-side lists). Each
+        cell supports the same "- " bullets and **bold** as rich text.
+      </div>
+      <label style={{ display: "block", marginBottom: 4 }}>Columns</label>
+      <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
+        {cols.map((col, i) => (
+          <div key={i} style={{ display: "flex", gap: 4, alignItems: "center" }}>
+            <input
+              placeholder={`Column ${i + 1}`}
+              value={col}
+              onChange={(e) => updateColumn(i, e.target.value)}
+              style={{ width: 150 }}
+            />
+            <button type="button" className="admin-icon-btn" onClick={() => removeColumn(i)}>✕</button>
+          </div>
+        ))}
+        <button type="button" className="btn-ghost admin-btn-small" onClick={addColumn}>+ Add column</button>
+      </div>
+
+      <label style={{ display: "block", marginBottom: 4 }}>Rows</label>
+      {rowList.map((row, r) => (
+        <div key={r} style={{ border: "1px solid var(--border-hairline)", borderRadius: 4, padding: 10, marginBottom: 8 }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: 4, marginBottom: 6 }}>
+            <button type="button" className="admin-icon-btn" onClick={() => moveRow(r, -1)} disabled={r === 0}>↑</button>
+            <button type="button" className="admin-icon-btn" onClick={() => moveRow(r, 1)} disabled={r === rowList.length - 1}>↓</button>
+            <button type="button" className="admin-icon-btn" onClick={() => removeRow(r)}>✕ row</button>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.max(cols.length, row.length, 1)}, 1fr)`, gap: 8 }}>
+            {(row.length ? row : [""]).map((cell, c) => (
+              <textarea
+                key={c}
+                placeholder={cols[c] || `Cell ${c + 1}`}
+                value={cell}
+                onChange={(e) => updateCell(r, c, e.target.value)}
+                style={{ minHeight: 50 }}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+      <button type="button" className="btn-ghost admin-btn-small" onClick={addRow}>+ Add row</button>
+    </div>
+  );
+}
+
 function SectionEditorBody({ section, onChange }) {
   const [showPreview, setShowPreview] = useState(false);
 
@@ -264,6 +390,45 @@ function SectionEditorBody({ section, onChange }) {
             <RichText text={section.body} />
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (section.type === "spec-table") {
+    return (
+      <div style={{ padding: "12px 0" }}>
+        <div className="field">
+          <label>Heading (optional)</label>
+          <input value={section.heading || ""} onChange={(e) => onChange({ heading: e.target.value })} />
+        </div>
+        <div className="mono" style={{ fontSize: 11, color: "var(--text-secondary)", marginBottom: 8 }}>
+          Label : value rows — e.g. Duration : 5 Days, Language : English. Good for course specs.
+        </div>
+        <SpecRowsEditor rows={section.rows} onChange={(rows) => onChange({ rows })} />
+        <button type="button" className="btn-ghost admin-btn-small" onClick={() => setShowPreview(!showPreview)} style={{ marginTop: 8 }}>
+          {showPreview ? "Hide preview" : "Show preview"}
+        </button>
+        {showPreview && (
+          <div style={{ border: "1px dashed var(--border-hairline-dashed)", borderRadius: 4, padding: 12, marginTop: 8 }}>
+            <SpecTable rows={section.rows || []} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (section.type === "data-table") {
+    return (
+      <div style={{ padding: "12px 0" }}>
+        <div className="field">
+          <label>Heading (optional)</label>
+          <input value={section.heading || ""} onChange={(e) => onChange({ heading: e.target.value })} />
+        </div>
+        <DataTableEditor
+          columns={section.columns}
+          rows={section.rows}
+          onChange={(patch) => onChange(patch)}
+        />
       </div>
     );
   }
@@ -305,19 +470,32 @@ function SectionsEditor({ sections, onChange }) {
     onChange(next);
   };
   const addSection = (type) => {
-    const base = type === "richtext"
-      ? { id: `tmp-${Date.now()}`, type, heading: "", body: "" }
-      : { id: `tmp-${Date.now()}`, type, heading: "", layout: "icon-grid", items: [] };
+    const base =
+      type === "richtext"
+        ? { id: `tmp-${Date.now()}`, type, heading: "", body: "" }
+        : type === "spec-table"
+        ? { id: `tmp-${Date.now()}`, type, heading: "", rows: [] }
+        : type === "data-table"
+        ? { id: `tmp-${Date.now()}`, type, heading: "", columns: [], rows: [] }
+        : { id: `tmp-${Date.now()}`, type, heading: "", layout: "icon-grid", items: [] };
     onChange([...list, base]);
     setOpenIndex(list.length);
+  };
+
+  const sectionLabel = (section) => {
+    if (section.type === "richtext") return "Rich text";
+    if (section.type === "spec-table") return "Spec table";
+    if (section.type === "data-table") return "Data table";
+    return `Content grid · ${section.layout || "icon-grid"}`;
   };
 
   return (
     <div>
       <label>Page content sections</label>
       <div className="mono" style={{ fontSize: 11, color: "var(--text-secondary)", margin: "4px 0 10px" }}>
-        These render in order on the public page — intro text, benefits, who-can-benefit, feature
-        blocks, whatever the page needs. Add as many as you like, in any order.
+        These render in order on the public page — intro text, spec tables, benefits, agendas,
+        comparison tables, feature blocks, whatever the page needs. Add as many as you like, in
+        any order.
       </div>
       {list.map((section, i) => (
         <div key={section.id || i} style={{ border: "1px solid var(--border-hairline)", borderRadius: 4, marginBottom: 8 }}>
@@ -327,7 +505,7 @@ function SectionsEditor({ sections, onChange }) {
           >
             <span className={`admin-chevron ${openIndex === i ? "open" : ""}`}>▸</span>
             <span className="mono" style={{ fontSize: 11, color: "var(--brand-blue)" }}>
-              {section.type === "richtext" ? "Rich text" : `Content grid · ${section.layout || "icon-grid"}`}
+              {sectionLabel(section)}
             </span>
             <span style={{ flex: 1, fontSize: 13 }}>{section.heading || "(no heading)"}</span>
             <span onClick={(e) => e.stopPropagation()} style={{ display: "flex", gap: 4 }}>
@@ -343,12 +521,18 @@ function SectionsEditor({ sections, onChange }) {
           )}
         </div>
       ))}
-      <div style={{ display: "flex", gap: 8 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <button type="button" className="btn-ghost admin-btn-small" onClick={() => addSection("richtext")}>
           + Add rich text
         </button>
         <button type="button" className="btn-ghost admin-btn-small" onClick={() => addSection("content-grid")}>
           + Add content grid
+        </button>
+        <button type="button" className="btn-ghost admin-btn-small" onClick={() => addSection("spec-table")}>
+          + Add spec table
+        </button>
+        <button type="button" className="btn-ghost admin-btn-small" onClick={() => addSection("data-table")}>
+          + Add data table
         </button>
       </div>
     </div>

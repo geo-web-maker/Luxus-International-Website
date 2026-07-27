@@ -351,6 +351,27 @@
 .content-grid.feature-rows .grid-item-text:only-child { grid-column: 1 / -1; }
 .content-grid.feature-rows .grid-item-heading { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin-bottom: 8px; }
 .content-grid.feature-rows .grid-item-body { font-size: 13px; color: var(--text-secondary); }
+
+/* Spec table — label : value rows, e.g. course duration/level/CPD credits */
+.spec-table { border: 1px solid var(--border-hairline); border-radius: 8px; overflow: hidden; }
+.spec-row { display: grid; grid-template-columns: 160px 20px 1fr; }
+.spec-row:not(:last-child) { border-bottom: 1px solid var(--border-hairline); }
+.spec-row > div { padding: 12px 16px; font-size: 14px; }
+.spec-label { font-weight: 600; color: var(--text-primary); background: var(--surface-raised); }
+.spec-sep { text-align: center; color: var(--text-secondary); background: var(--surface-raised); padding-left: 0; padding-right: 0; }
+.spec-value { color: var(--text-secondary); }
+@media (max-width: 600px) { .spec-row { grid-template-columns: 120px 14px 1fr; } .spec-row > div { padding: 10px 12px; font-size: 13px; } }
+
+/* Data table — arbitrary columns/rows, e.g. credential comparison tables
+   or side-by-side benefit lists rendered as a headerless 2-column table */
+.data-table-wrap h3 { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin: 24px 0 12px; }
+.data-table-scroll { overflow-x: auto; border: 1px solid var(--border-hairline); border-radius: 8px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th, .data-table td { padding: 12px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border-hairline); }
+.data-table th { font-family: var(--font-display); font-weight: 700; font-size: 12px; text-transform: uppercase; color: var(--brand-blue); background: var(--surface-raised); white-space: nowrap; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table td .richtext p:last-child { margin-bottom: 0; }
+.data-table td .richtext ul:last-child { margin-bottom: 0; }
 .sidebar { position: sticky; top: 24px; align-self: start; }
 .sidebar h3 { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; margin-bottom: 4px; }
 .sidebar .sub { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
