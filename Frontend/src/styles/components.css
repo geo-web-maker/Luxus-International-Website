@@ -265,10 +265,11 @@
 .card .id { position: relative; z-index: 2; font-size: 11px; color: var(--brand-blue); margin-bottom: 6px; }
 .card .name { position: relative; z-index: 2; font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.01em; }
 .card .filetag { position: absolute; z-index: 2; top: 14px; left: 18px; right: 18px; font-size: 9px; color: var(--text-faint); border: 1px dashed var(--border-hairline-dashed); padding: 4px 7px; border-radius: 2px; }
-/* contain (not cover) so the full picture is always visible, never cropped;
-   the card keeps its own background behind the letterboxed image so there's
-   no visual gap where the image doesn't fill the frame. */
-.card-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; background: var(--bg-navy-alt); z-index: 0; }
+/* cover, not contain: these boxes are small and decorative (wayfinding,
+   not close inspection), so a clean edge-to-edge crop reads far better
+   than letterboxing. The hero image on the detail page (.detail-image)
+   stays on contain since that one photo is worth seeing in full. */
+.card-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; background: var(--bg-navy-alt); z-index: 0; }
 @media (max-width: 560px) { .card { height: 180px; padding: 16px; } }
 
 .info-strip { border-top: 1px solid var(--border-hairline); border-bottom: 1px solid var(--border-hairline); }
@@ -320,6 +321,11 @@
 
 /* Service detail */
 .detail-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 48px; padding: 52px 0; }
+/* Standalone service pages (no parent category, no children of their own —
+   e.g. hse-training) have nothing to put in a sidebar. Collapse to one
+   full-width column instead of leaving the 1fr column empty. */
+.detail-grid--solo { grid-template-columns: 1fr; }
+.detail-grid--solo .detail-main .richtext { max-width: 860px; }
 @media (max-width: 960px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; padding: 32px 0; } }
 .detail-placeholder { width: 100%; min-height: 200px; border-radius: 4px; margin-bottom: 24px; background: repeating-linear-gradient(135deg, #16213A 0, #16213A 2px, transparent 2px, transparent 14px); border: 1px dashed var(--border-hairline-dashed); display: flex; align-items: center; justify-content: center; }
 .detail-placeholder span { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-align: center; padding: 0 20px; }
@@ -345,7 +351,8 @@
 .content-grid.icon-grid .grid-item { text-align: center; }
 .content-grid.icon-grid .grid-item-media { width: 60px; height: 60px; margin: 0 auto 10px; border-radius: 50%; background: var(--surface-raised); border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .content-grid.icon-grid .grid-item-media img { width: 32px; height: 32px; object-fit: contain; }
-.content-grid.icon-grid .grid-item-heading { font-size: 13px; color: var(--text-secondary); }
+.content-grid.icon-grid .grid-item-heading { font-family: var(--font-display); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.02em; color: var(--brand-blue); margin-bottom: 8px; }
+.content-grid.icon-grid .grid-item-body { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
 @media (max-width: 700px) { .content-grid.icon-grid .grid-items { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 420px) { .content-grid.icon-grid .grid-items { grid-template-columns: 1fr; } }
 
@@ -385,6 +392,7 @@
 .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .data-table th, .data-table td { padding: 12px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border-hairline); }
 .data-table th { font-family: var(--font-display); font-weight: 700; font-size: 12px; text-transform: uppercase; color: var(--brand-blue); background: var(--surface-raised); white-space: nowrap; }
+.data-table td { color: var(--text-secondary); }
 .data-table tr:last-child td { border-bottom: none; }
 .data-table td .richtext p:last-child { margin-bottom: 0; }
 .data-table td .richtext ul:last-child { margin-bottom: 0; }
@@ -393,12 +401,19 @@
 .sidebar .sub { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
 .sidebar-item { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border-hairline); font-size: 12px; }
 .sidebar-item .id { color: var(--brand-blue); margin-right: 8px; }
-/* Sibling "more in this category" cards — same visual treatment as the
-   category selection grid (.card/.card-image), just single-column since
-   the sidebar column is narrower than the main content area. */
-.sidebar-cards { display: flex; flex-direction: column; gap: 14px; }
-.sidebar-cards .card { height: 140px; padding: 16px; }
-.sidebar-cta { border: 1px solid var(--brand-green); padding: 18px; margin-top: 20px; }
+/* Sibling "more in this category" list — purpose-built for the narrow
+   sidebar column rather than reusing the big category-grid .card at a
+   squeezed-down size. Thumbnail sits beside the name instead of behind
+   it, so there's no overlay fighting for space and no path label needed. */
+.sidebar-service-list { display: flex; flex-direction: column; gap: 10px; }
+.sidebar-service-card { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 4px; border: 1px solid var(--border-hairline); background: var(--surface-raised); transition: border-color 0.2s ease, transform 0.2s ease; }
+.sidebar-service-card:hover { border-color: var(--brand-blue); transform: translateY(-2px); }
+.sidebar-service-card .thumb { width: 44px; height: 44px; flex-shrink: 0; border-radius: 3px; overflow: hidden; background: var(--bg-navy-alt); display: flex; align-items: center; justify-content: center; }
+.sidebar-service-card .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.sidebar-service-card .thumb .no-image { font-size: 8px; color: var(--text-faint); }
+.sidebar-service-card .name { font-family: var(--font-display); font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.01em; line-height: 1.35; color: var(--text-primary); }
+
+.sidebar-cta { border: 1px solid var(--brand-green); padding: 18px; margin-bottom: 24px; }
 .sidebar-cta .t { font-family: var(--font-display); font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 6px; }
 .sidebar-cta p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; }
 .sidebar-cta .btn-primary { width: 100%; text-align: center; padding: 12px; }

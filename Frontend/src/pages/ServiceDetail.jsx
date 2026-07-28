@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import ServiceCard from "../components/ui/ServiceCard";
+import SidebarServiceCard from "../components/ui/SidebarServiceCard";
 import SectionRenderer from "../components/ServiceSections/SectionRenderer";
 import { findServiceByPath } from "../lib/api";
 import { useServices } from "../hooks/useServices";
@@ -54,7 +55,7 @@ export default function ServiceDetail() {
         <PageHeader eyebrow={fullPath} title={result.name} />
         <div className="section">
             <div className="wrap">
-            <p style={{ color: "var(--text-secondary)", maxWidth: 640, marginBottom: 32 }}>
+            <p style={{ color: "var(--text-secondary)", maxWidth: 860, marginBottom: 32 }}>
               {result.summary}
             </p>
             <div className="grid3">
@@ -74,11 +75,16 @@ export default function ServiceDetail() {
     );
   }
 
-  // Leaf page (a specific standard or sub-service)
+  // Leaf page (a specific standard or sub-service) — or a standalone
+  // top-level service with no children of its own (e.g. hse-training).
+  // The latter has no parent, so there's nothing to put in a sidebar;
+  // treat it the same as a leaf page's main content, just full-width
+  // instead of leaving the sidebar column empty.
   const parent = result.parent;
   const siblings = parent
     ? parent.children.filter((c) => c.slug !== result.slug)
     : [];
+  const hasSidebar = Boolean(parent);
 
   return (
     <>
@@ -87,7 +93,7 @@ export default function ServiceDetail() {
         title={result.standardCode ? `${result.standardCode} ${result.name}` : result.name}
       />
       <div className = "wrap">
-        <div className="detail-grid">
+        <div className={hasSidebar ? "detail-grid" : "detail-grid detail-grid--solo"}>
           <div className="detail-main">
             {result.image?.status === "confirmed" && result.image?.file ? (
               <img src={result.image.file} alt={result.name} className="detail-image" />
@@ -107,26 +113,26 @@ export default function ServiceDetail() {
             )}
           </div>
 
-          {parent && (
+          {hasSidebar && (
             <div className="sidebar">
-              <h3>More in {parent.name}</h3>
-              <span className="sub mono">{parent.path}</span>
-              <div className="sidebar-cards">
-                {siblings.map((sib) => (
-                  <ServiceCard
-                    key={sib.slug}
-                    path={sib.path}
-                    name={sib.standardCode ? `${sib.standardCode} — ${sib.name}` : sib.name}
-                    image={sib.image}
-                  />
-                ))}
-              </div>
               <div className="sidebar-cta">
                 <div className="t">Request a quote</div>
                 <p>Get pricing for {result.name} tailored to your organization.</p>
                 <a href={`/contact?intent=quote&service=${result.slug}`} className="btn-primary">
                   Get a quotation
                 </a>
+              </div>
+              <h3>More in {parent.name}</h3>
+              <span className="sub mono">{parent.path}</span>
+              <div className="sidebar-service-list">
+                {siblings.map((sib) => (
+                  <SidebarServiceCard
+                    key={sib.slug}
+                    path={sib.path}
+                    name={sib.standardCode ? `${sib.standardCode} — ${sib.name}` : sib.name}
+                    image={sib.image}
+                  />
+                ))}
               </div>
             </div>
           )}
