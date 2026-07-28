@@ -280,6 +280,7 @@
 .info-cell .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
 .info-cell .value { font-size: 15px; color: #E7EAEF; }
 @media (max-width: 860px) { .info-strip > .wrap { grid-template-columns: 1fr; } .info-cell { border-right: none; border-bottom: 1px solid var(--border-hairline); padding: 20px 0; } }
+@media (min-width: 861px) { .info-cell { text-align: center; } }
 
 .footer > .wrap { display: flex; justify-content: space-between; padding-top: 28px; padding-bottom: 28px; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; gap: 8px; }
 .footer .hl { color: var(--brand-blue); }
@@ -326,15 +327,17 @@
 .detail-placeholder { width: 100%; min-height: 200px; border-radius: 4px; margin-bottom: 24px; background: repeating-linear-gradient(135deg, #16213A 0, #16213A 2px, transparent 2px, transparent 14px); border: 1px dashed var(--border-hairline-dashed); display: flex; align-items: center; justify-content: center; }
 .detail-placeholder span { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-align: center; padding: 0 20px; }
 @media (max-width: 600px) { .detail-placeholder { min-height: 120px; padding: 12px; } .detail-placeholder span { font-size: 10px; } }
-/* No forced shape here: width 100% + height auto means the box takes
-   whatever aspect ratio the actual image has, so nothing gets cropped or
-   letterboxed — a wide photo renders wide, a squarer one renders shorter.
-   max-height is just a safety net for an unusually tall portrait photo;
-   object-fit: contain only ever engages in that rare case. */
-.detail-image { display: block; width: 100%; height: auto; max-height: 640px; object-fit: contain; background: var(--bg-navy-alt); border-radius: 4px; margin-bottom: 24px; border: 1px solid var(--border-hairline); }
+/* No forced box here on purpose. width:100% + a height cap was the actual
+   cause of the letterboxing: it created a rigid box shaped by the
+   container/cap ratio, not by the photo, so object-fit had to paper over
+   the mismatch with the background color. Using max-width/max-height with
+   width/height left auto means the rendered box is always exactly the
+   image's own aspect ratio — there's no leftover space for a background
+   to show through, at any viewport width. */
+.detail-image { display: block; width: auto; max-width: 100%; height: auto; max-height: 70vh; margin: 0 auto 24px; background: var(--bg-navy-alt); border-radius: 4px; border: 1px solid var(--border-hairline); }
 .detail-main p { font-size: 14px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 14px; }
 .detail-main h3 { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin: 24px 0 12px; }
-@media (max-width: 600px) { .detail-image { max-height: 420px; } }
+@media (max-width: 600px) { .detail-image { max-height: 50vh; } }
 /* Service page content sections — see ServiceSections/. One data shape
    (heading + items of {media?, heading, body?}), three visual treatments
 

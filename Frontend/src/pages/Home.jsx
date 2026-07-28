@@ -17,7 +17,6 @@ export default function Home() {
   }
 
   const { company, isoCoverageTags } = content;
-  const teaserServices = services.slice(0, 3);
 
   // Typed/rotated in the hero tagline — real content only: the client's own
   // tagline, the previously-approved headline copy, and real service lines
@@ -80,7 +79,7 @@ export default function Home() {
             <span className="count mono">{services.length} practice areas</span>
           </div>
           <div className="grid3">
-            {teaserServices.map((s) => (
+            {services.map((s) => (
               <ServiceCard key={s.slug} path={s.path} name={s.shortName} image={s.image} />
             ))}
           </div>

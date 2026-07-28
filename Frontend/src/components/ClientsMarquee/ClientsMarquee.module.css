@@ -85,9 +85,51 @@
 
 @media (max-width: 640px) {
   .chip { width: 148px; height: 88px; padding: 6px 8px; }
+
+  /* Below this width the horizontal strip only shows ~2 logos at a time
+     even with the edge fade, so it switches to a short vertical ticker
+     instead: fixed-height window, column flow, same seamless-loop trick
+     but scrolling up instead of sideways. */
+  .marquee {
+    height: 280px;
+    padding-bottom: 0;
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0,
+      #000 24px,
+      #000 calc(100% - 24px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0,
+      #000 24px,
+      #000 calc(100% - 24px),
+      transparent 100%
+    );
+  }
+
+  .track {
+    flex-direction: column;
+    width: 100%;
+    height: max-content;
+    animation-name: marquee-scroll-vertical;
+    animation-duration: 26s;
+  }
+
+  .chip { width: 200px; height: 96px; margin: 0 auto; }
+}
+
+@keyframes marquee-scroll-vertical {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee { overflow-x: auto; }
   .track { animation: none; }
+}
+
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  .marquee { height: auto; max-height: 280px; overflow-x: hidden; overflow-y: auto; }
 }
