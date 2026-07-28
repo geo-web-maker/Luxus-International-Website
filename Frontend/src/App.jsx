@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
@@ -18,7 +19,8 @@ import AdminSubmissions from "./pages/admin/AdminSubmissions";
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <Routes>
       {/* Admin routes render outside <Layout> — no public header/footer. */}
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin" element={<AdminLayout />}>
@@ -49,6 +51,8 @@ export default function App() {
           </Layout>
         }
       />
-    </Routes>
+      </Routes>
+      <Analytics />
+    </>
   );
 }
