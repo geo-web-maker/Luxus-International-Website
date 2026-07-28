@@ -55,7 +55,7 @@ export default function ServiceDetail() {
         <PageHeader eyebrow={fullPath} title={result.name} />
         <div className="section">
             <div className="wrap">
-            <p style={{ color: "var(--text-secondary)", maxWidth: 860, marginBottom: 32 }}>
+            <p style={{ color: "var(--text-secondary)", marginBottom: 32 }}>
               {result.summary}
             </p>
             <div className="grid3">
@@ -75,16 +75,23 @@ export default function ServiceDetail() {
     );
   }
 
-  // Leaf page (a specific standard or sub-service) — or a standalone
-  // top-level service with no children of its own (e.g. hse-training).
-  // The latter has no parent, so there's nothing to put in a sidebar;
-  // treat it the same as a leaf page's main content, just full-width
-  // instead of leaving the sidebar column empty.
+  // Leaf page (a specific standard/sub-service under a category) — or a
+  // standalone top-level service with no children of its own (e.g.
+  // hse-training). Both get the same sub-service-style treatment (hero,
+  // content sections, quote CTA + "more services" sidebar); the only thing
+  // that differs is where the sidebar's list comes from:
+  //   - sub-service (has a parent category) -> its sibling standards
+  //   - standalone top-level service (no parent) -> the other top-level
+  //     services, since there's no category to pull siblings from
   const parent = result.parent;
-  const siblings = parent
+  const isSubService = Boolean(parent);
+
+  const siblings = isSubService
     ? parent.children.filter((c) => c.slug !== result.slug)
-    : [];
-  const hasSidebar = Boolean(parent);
+    : services.filter((s) => s.slug !== result.slug && s.path !== fullPath);
+
+  const sidebarLabel = isSubService ? `More in ${parent.name}` : "More services";
+  const sidebarPath = isSubService ? parent.path : "/ser";
 
   return (
     <>
@@ -93,7 +100,7 @@ export default function ServiceDetail() {
         title={result.standardCode ? `${result.standardCode} ${result.name}` : result.name}
       />
       <div className = "wrap">
-        <div className={hasSidebar ? "detail-grid" : "detail-grid detail-grid--solo"}>
+        <div className="detail-grid">
           <div className="detail-main">
             {result.image?.status === "confirmed" && result.image?.file ? (
               <img src={result.image.file} alt={result.name} className="detail-image" />
@@ -113,29 +120,27 @@ export default function ServiceDetail() {
             )}
           </div>
 
-          {hasSidebar && (
-            <div className="sidebar">
-              <div className="sidebar-cta">
-                <div className="t">Request a quote</div>
-                <p>Get pricing for {result.name} tailored to your organization.</p>
-                <a href={`/contact?intent=quote&service=${result.slug}`} className="btn-primary">
-                  Get a quotation
-                </a>
-              </div>
-              <h3>More in {parent.name}</h3>
-              <span className="sub mono">{parent.path}</span>
-              <div className="sidebar-service-list">
-                {siblings.map((sib) => (
-                  <SidebarServiceCard
-                    key={sib.slug}
-                    path={sib.path}
-                    name={sib.standardCode ? `${sib.standardCode} — ${sib.name}` : sib.name}
-                    image={sib.image}
-                  />
-                ))}
-              </div>
+          <div className="sidebar">
+            <div className="sidebar-cta">
+              <div className="t">Request a quote</div>
+              <p>Get pricing for {result.name} tailored to your organization.</p>
+              <a href={`/contact?intent=quote&service=${result.slug}`} className="btn-primary">
+                Get a quotation
+              </a>
             </div>
-          )}
+            <h3>{sidebarLabel}</h3>
+            <span className="sub mono">{sidebarPath}</span>
+            <div className="sidebar-service-list">
+              {siblings.map((sib) => (
+                <SidebarServiceCard
+                  key={sib.slug}
+                  path={sib.path}
+                  name={sib.standardCode ? `${sib.standardCode} — ${sib.name}` : sib.name}
+                  image={sib.image}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

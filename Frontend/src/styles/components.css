@@ -268,7 +268,8 @@
 /* cover, not contain: these boxes are small and decorative (wayfinding,
    not close inspection), so a clean edge-to-edge crop reads far better
    than letterboxing. The hero image on the detail page (.detail-image)
-   stays on contain since that one photo is worth seeing in full. */
+   is different — it's the one photo people actually look at, so it
+   renders at its own natural aspect ratio instead of being cropped. */
 .card-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; background: var(--bg-navy-alt); z-index: 0; }
 @media (max-width: 560px) { .card { height: 180px; padding: 16px; } }
 
@@ -321,21 +322,19 @@
 
 /* Service detail */
 .detail-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 48px; padding: 52px 0; }
-/* Standalone service pages (no parent category, no children of their own —
-   e.g. hse-training) have nothing to put in a sidebar. Collapse to one
-   full-width column instead of leaving the 1fr column empty. */
-.detail-grid--solo { grid-template-columns: 1fr; }
-.detail-grid--solo .detail-main .richtext { max-width: 860px; }
 @media (max-width: 960px) { .detail-grid { grid-template-columns: 1fr; gap: 32px; padding: 32px 0; } }
 .detail-placeholder { width: 100%; min-height: 200px; border-radius: 4px; margin-bottom: 24px; background: repeating-linear-gradient(135deg, #16213A 0, #16213A 2px, transparent 2px, transparent 14px); border: 1px dashed var(--border-hairline-dashed); display: flex; align-items: center; justify-content: center; }
 .detail-placeholder span { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-align: center; padding: 0 20px; }
 @media (max-width: 600px) { .detail-placeholder { min-height: 120px; padding: 12px; } .detail-placeholder span { font-size: 10px; } }
-/* contain + auto height (capped) so the frame adapts to the picture's own
-   aspect ratio instead of forcing every image into a fixed 280px crop */
-.detail-image { display: block; width: 100%; height: auto; max-height: 480px; object-fit: contain; background: var(--bg-navy-alt); border-radius: 4px; margin-bottom: 24px; border: 1px solid var(--border-hairline); }
+/* No forced shape here: width 100% + height auto means the box takes
+   whatever aspect ratio the actual image has, so nothing gets cropped or
+   letterboxed — a wide photo renders wide, a squarer one renders shorter.
+   max-height is just a safety net for an unusually tall portrait photo;
+   object-fit: contain only ever engages in that rare case. */
+.detail-image { display: block; width: 100%; height: auto; max-height: 640px; object-fit: contain; background: var(--bg-navy-alt); border-radius: 4px; margin-bottom: 24px; border: 1px solid var(--border-hairline); }
 .detail-main p { font-size: 14px; line-height: 1.75; color: var(--text-secondary); margin-bottom: 14px; }
 .detail-main h3 { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; color: var(--brand-blue); margin: 24px 0 12px; }
-@media (max-width: 600px) { .detail-image { max-height: 260px; } }
+@media (max-width: 600px) { .detail-image { max-height: 420px; } }
 /* Service page content sections — see ServiceSections/. One data shape
    (heading + items of {media?, heading, body?}), three visual treatments
 
