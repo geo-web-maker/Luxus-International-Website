@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className="wrap navbar-inner">
         <NavLink to="/" className="logo">
           <img src={logoWhite} alt="Luxuz Consult logo" />
-          LUXUZ <span>CONSULT</span>
+          <span>LUXUZ</span> INTERNATIONAL CONSULT
         </NavLink>
 
         {/* Desktop navigation */}
