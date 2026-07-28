@@ -1,7 +1,7 @@
 /* Luxuz Consult — global design tokens, derived from the approved design brief.
    Do not introduce new accent colors — see /DESIGN_BRIEF.md at project root. */
 
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
   /* surfaces */
@@ -28,8 +28,8 @@
   --brand-green-hover: #12945447;
 
   /* type */
-  --font-display: 'Archivo', sans-serif;
-  --font-body: 'Source Sans 3', sans-serif;
+  --font-display: 'Chakra Petch', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 }
 

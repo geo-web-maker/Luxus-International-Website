@@ -8,7 +8,7 @@ export default function TopBar() {
   return (
     <div className="topbar mono">
       <div className="wrap">
-        <span>luxuzconsult.com <span className="hl">{displayPath}</span></span>
+        <span className="topbar-path">luxuzconsult.com <span className="hl">{displayPath}</span></span>
         <span>tel: <span className="hl">{company.phone}</span> · 24/7</span>
       </div>
     </div>
