@@ -377,15 +377,21 @@
 .content-grid.feature-rows .grid-item-heading { font-family: var(--font-display); font-weight: 700; font-size: 17px; margin-bottom: 8px; }
 .content-grid.feature-rows .grid-item-body { font-size: 13px; color: var(--text-secondary); }
 
-/* Spec table — label : value rows, e.g. course duration/level/CPD credits */
+/* Spec table — label : value rows, e.g. course duration/level/CPD credits.
+   minmax(...) + min-width:0 matter here: a grid item's default min-width
+   is "auto" (its content's own natural width), which the browser will
+   never shrink below even inside a 1fr track. Without overriding that,
+   a long value (e.g. "Available (Free within 24 Months)") refuses to
+   wrap and forces the whole row — and the whole page — wider than the
+   viewport on mobile instead of wrapping normally. */
 .spec-table { border: 1px solid var(--border-hairline); border-radius: 8px; overflow: hidden; }
-.spec-row { display: grid; grid-template-columns: 160px 20px 1fr; }
+.spec-row { display: grid; grid-template-columns: minmax(96px, 160px) 20px minmax(0, 1fr); }
 .spec-row:not(:last-child) { border-bottom: 1px solid var(--border-hairline); }
-.spec-row > div { padding: 12px 16px; font-size: 14px; }
+.spec-row > div { padding: 12px 16px; font-size: 14px; min-width: 0; overflow-wrap: break-word; }
 .spec-label { font-weight: 600; color: var(--text-primary); background: var(--surface-raised); }
 .spec-sep { text-align: center; color: var(--text-secondary); background: var(--surface-raised); padding-left: 0; padding-right: 0; }
 .spec-value { color: var(--text-secondary); }
-@media (max-width: 600px) { .spec-row { grid-template-columns: 120px 14px 1fr; } .spec-row > div { padding: 10px 12px; font-size: 13px; } }
+@media (max-width: 600px) { .spec-row { grid-template-columns: minmax(84px, 120px) 14px minmax(0, 1fr); } .spec-row > div { padding: 10px 12px; font-size: 13px; } }
 
 /* Data table — arbitrary columns/rows, e.g. credential comparison tables
    or side-by-side benefit lists rendered as a headerless 2-column table */
